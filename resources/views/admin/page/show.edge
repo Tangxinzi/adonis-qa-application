@@ -1,0 +1,28 @@
+@layout('layouts.main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - QA System</title>
+@endsection
+
+@section('style')
+@endsection
+
+@section('content')
+  @!component('components.navbar', data=data, csrf=csrfField())
+  <div class="ui text container" style="padding: 30px 0;">
+    @if(flashMessage('message'))
+      @!component('components.alert', {
+        type: [flashMessage('type')],
+        message: [flashMessage('message')]
+      })
+    @endif
+    {{-- <h1 class="ui centered header">{{ data.page.page_title || '' }}</h1> --}}
+    {{{ data.page.page_detail || '' }}}
+  </div>
+@endsection
+
+@section('script')
+
+@endsection

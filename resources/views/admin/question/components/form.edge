@@ -1,0 +1,91 @@
+<form class="ui form segment" action="{{ route('Admin/QuestionController.store') }}" method="POST" enctype="multipart/form-data">
+  <div class="field">
+    <label>ID</label>
+    <div class="ui input">
+      <input type="text" name="question_id" value="{{ data.questions.question_id || '' }}">
+    </div>
+  </div>
+  <div class="field">
+    <label>题目标题</label>
+    <div class="ui input">
+      <input type="text" name="question_title" value="{{ data.questions.question_title || '' }}">
+    </div>
+  </div>
+  <div class="four fields">
+    <div class="field">
+      <label>状态</label>
+      <div class="ui selection dropdown">
+        <input type="hidden" name="question_status" value="{{ data.questions.question_status }}">
+        <div class="default text">选择</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div class="item" data-value="0">待发布</div>
+          <div class="item" data-value="1">已发布</div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>难度</label>
+      <div class="ui selection dropdown">
+        <input type="hidden" name="question_level" value="{{ data.questions.question_level }}">
+        <div class="default text">选择</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div class="item" data-value="0">简单</div>
+          <div class="item" data-value="1">中等</div>
+          <div class="item" data-value="1">复杂</div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="article_catalog">分类目录</label>
+      <div class="ui selection dropdown">
+        <input id="question_catalog_id" name="question_catalog_id" type="hidden" value="{{ data.questions.question_catalog_id || '' }}" />
+        <i class="dropdown icon"></i>
+        <div class="default text">选择</div>
+        <div class="menu">
+          @each(row in data.question_catalog.value.value)
+            <div class="item" data-value="{{ data.question_catalog.value.id[$loop.index] }}">{{ row }}</div>
+          @endeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="article_catalog">题目标签</label>
+      <div class="ui selection dropdown">
+        <input id="question_label_id" name="question_label_id" type="hidden" value="{{ data.questions.question_label_id || '' }}" />
+        <i class="dropdown icon"></i>
+        <div class="default text">选择</div>
+        <div class="menu">
+          @each(row in data.question_label.value.value)
+            <div class="item" data-value="{{ data.question_label.value.id[$loop.index] }}">{{ row }}</div>
+          @endeach
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="six fields">
+    <div class="field">
+      <label>主题图</label>
+      <img class="ui small rounded bordered image" onclick="question_main_img.click()" id="question_main_img_tmp" src="{{ data.questions.question_main_img.id ? assetsUrl(data.questions.question_main_img.filePath + data.questions.question_main_img.clientName) : assetsUrl('assets/images/white-image.png') }}">
+      <input type="file" name="question_main_img[]" value="" id="question_main_img" onchange="change('#question_main_img', '#question_main_img_tmp');" hidden />
+    </div>
+  </div>
+  <div class="field">
+    <label>题目提示</label>
+    <textarea name="question_tips" rows="8" cols="80">{{ data.questions.question_tips || '' }}</textarea>
+  </div>
+  <div class="field">
+    <label>题目详细内容</label>
+    <div class="ui segment" style="padding: 0;">
+      <div id="editor—wrapper">
+        <div id="toolbar-container"><!-- 工具栏 --></div>
+        <div id="editor-container"><!-- 编辑器 --></div>
+      </div>
+      <input id="detail" type="text" name="question_detail" value="{{ data.questions.question_detail || '' }}" hidden />
+    </div>
+  </div>
+  {{ csrf }}
+  <input type="text" name="id" value="{{ data.questions.id }}" hidden />
+  <button type="submit" name="submit" value="{{ submit }}" class="ui fluid button">提交</button>
+</form>

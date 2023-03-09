@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://semantic-ui.com/dist/semantic.min.css" />
+    <style>
+        /* Global Style */
+        body,
+        body.pushable>.pusher {
+            background-color: #F8F8F8;
+        }
+
+        .ui.container .ui.grid>[class*="six wide computer"].column {
+            margin-top: 1rem !important;
+        }
+
+        .ui.main.container {
+            min-height: 600px;
+        }
+
+        .activating {
+            cursor: pointer;
+        }
+
+        .null {
+            width: 200px;
+            display: block;
+            text-align: center;
+            margin: 60px auto 240px;
+        }
+
+        .none {
+            display: none !important;
+        }
+
+        .flex-between {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .flex-around {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .header.flex-between {
+            margin-bottom: 1rem;
+        }
+
+        .header.flex-between .button {
+            margin-right: 0;
+        }
+
+        .header.flex-between h2 {
+            margin: 0;
+        }
+
+        .text-one {
+            width: 100%;
+            word-break: break-all;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .text-two {
+            width: 100%;
+            word-break: break-all;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ke-content {
+            font: 14px/1.5 "sans serif", tahoma, verdana, helvetica;
+        }
+
+        /* Big Large Monitor */
+        @media only screen and (min-width:1400px) {
+            .ui.container {
+                width: 1350px;
+                margin-left: auto !important;
+                margin-right: auto !important
+            }
+
+            .ui.grid.container {
+                width: calc(1350px + 2rem) !important
+            }
+
+            .ui.relaxed.grid.container {
+                width: calc(1350px + 3rem) !important
+            }
+
+            .ui.very.relaxed.grid.container {
+                width: calc(1350px + 5rem) !important
+            }
+        }
+
+        /* Global Slider */
+        .ui.secondary.vertical.pointing.menu .item {
+            padding-left: 0;
+            cursor: pointer;
+            font-size: 14px;
+            padding-top: 0;
+            padding-bottom: 0;
+            height: auto;
+            line-height: 38px;
+        }
+
+        .ui.vertical.secondary.menu .item>.menu .item {
+            padding: 0 2em !important;
+            left: 5px;
+        }
+
+        .ui.basic.button.logout {
+            color: rgba(0, 0, 0, .8) !important;
+            border: 0 !important;
+            padding: 0;
+            margin: 0;
+            box-shadow: none;
+            width: 80%;
+            text-align: left;
+        }
+
+        .ui.basic.button.logout:focus {
+            background-color: transparent !important;
+        }
+
+        .ui.vertical.menu {
+            width: 82%;
+        }
+
+        /* Global Navigator */
+        .ui.borderless.menu {
+            border: 0;
+            border-radius: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .ui.borderless.menu a.item:hover {
+            background: transparent;
+        }
+
+        .ui.borderless.menu .ui.header {
+            font-size: 1.4rem;
+            margin: 0 0 0 1rem;
+        }
+
+        .ui.borderless.menu .item.register {
+            padding-left: 1.14285714em !important;
+        }
+
+        .ui.menu .item {
+            padding-right: 0;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .ui.menu .item {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            .ui.grid .four.wide.column {
+                display: none !important;
+            }
+
+            .ui.grid .twelve.wide.column {
+                width: 100% !important;
+            }
+
+            .ui.visible.uncover.sidebar {
+                overflow: hidden;
+                flex-direction: column;
+            }
+
+            .ui.secondary.vertical.pointing.menu {
+                width: 100%;
+                border: 0;
+            }
+
+            .ui.secondary.vertical.pointing.menu .item {
+                width: 95%;
+                border: 0;
+                margin: 0 auto;
+            }
+
+            .ui.sidebar.menu .item:before {
+                display: none;
+            }
+        }
+
+        @media only screen and (max-width: 767px) {
+            .ui.menu .item {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media only screen and (min-width: 1200px) {
+            .ui.borderless.menu .left.item.menu {
+                display: none;
+            }
+
+            .ui.borderless.menu .item.logo,
+            .ui.borderless.menu .item.register {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ui sidebar menu">
+        <div class="item menu close-icon">
+            <i class="material-icons">close</i>
+        </div>
+    </div>
+    <div class="pusher">
+        <div class="ui large borderless menu">
+            <div class="ui container flex-between">
+                <div class="left item menu">
+                    <i class="material-icons">menu</i>
+                </div>
+                <a class="logo item" href="/">
+                    <img src="/logo.png" />
+                    <h1 class="ui header">智慧商城</h1>
+                </a>
+                <div class="right item menu">
+                    <a href="#" id="nickname" class="activating click" data-position="bottom center" data-html=''>
+                    Admin</a>
+                </div>
+            </div>
+        </div>
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="four wide column">
+                    <div class="ui secondary vertical pointing menu">
+                        <a class="item active" href="#">
+                            <i class="area chart icon"></i> 控制台
+                        </a>
+                        <div class="item">
+                            <i class="list icon"></i> 产品管理
+                            <div class="menu">
+                                <a class="item"
+                                    href="#">产品设置</a>
+                                <a class="item"
+                                    href="#">买卖专区</a>
+                            </div>
+                        </div>
+                        <a class="item"
+                            href="#">
+                            <i class="tags icon"></i> 订单管理
+                        </a>
+                    </div>
+                </div>
+                <div class="twelve wide column">
+                    <h2 class="ui header">title</h2>
+                    <div class="ui form">
+                        <!-- code -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+        <script src="https://semantic-ui.com/dist/semantic.min.js"></script>
+        <script>
+            /* Global JavaScript */
+            $('.ui.sidebar')
+                .sidebar('setting', 'dimPage', true)
+                .sidebar('attach events', '.ui.sidebar .close-icon')
+                .sidebar('attach events', '.ui.large.borderless.menu .left.menu')
+                .sidebar({ transition: 'scale down' })
+
+            $('.ui.secondary.vertical.pointing.menu').clone().appendTo('.ui.sidebar.menu')
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<div class="ui pages">
+  <h2 class="ui header center aligned">中影智慧数字影片二级市场订购单</h2>
+  <div class="h2 head flex-between">
+    <div>
+      <p style="position: relative;">　<img src="/assets/images/smart-on-demand.png" /></p>
+      <p>地址：北京西城区北展北街7号华远企业号E座2层</p>
+      <p>商务经理：（自动生成姓名+电话）</p>
+    </div>
+    <div>
+      <p>订单编号：（系统自动生成）</p>
+      <p>合同编号：</p>
+      <p>提交日期：（自动生成,以客户提交时间为准）</p>
+    </div>
+  </div>
+  <h3 class="ui header center aligned">订购明细（一）</h3>
+  <div class="h3 head flex-around">
+    <div>
+      <p>影片名称：</p>
+      <p>放映单价（元/次）：</p>
+      <p>订购场次：</p>
+      <p>合计金额：</p>
+      <p>放映日期：</p>
+    </div>
+    <div>
+      <p>影片版本：</p>
+      <p>密钥接收邮箱：</p>
+      <p>硬盘接收人姓名：</p>
+      <p>接收人联系方式：</p>
+      <p>硬盘接收地址：</p>
+    </div>
+  </div>
+  <h4 class="ui header center aligned">订购场所信息</h4>
+  <div class="h4 head flex-around">
+    <div>
+      <p>放映单位名称：</p>
+      <p>放映场所名称：</p>
+      <p>放映场所类型：</p>
+    </div>
+    <div>
+      <p>服务器品牌型号：</p>
+      <p>放映机品牌型号：</p>
+      <p>服务器序列号：</p>
+    </div>
+    <div>
+      <p>影厅名称/影厅号：</p>
+      <p>对应影厅座位数：</p>
+      <p></p>
+    </div>
+  </div>
+  <h3 class="ui header center aligned">订购明细（二）</h3>
+  <div class="h3 head flex-around">
+    <div>
+      <p>影片名称：</p>
+      <p>放映单价（元/次）：</p>
+      <p>订购场次：</p>
+      <p>合计金额：</p>
+      <p>放映日期：</p>
+    </div>
+    <div>
+      <p>影片版本：</p>
+      <p>密钥接收邮箱：</p>
+      <p>硬盘接收人姓名：</p>
+      <p>接收人联系方式：</p>
+      <p>硬盘接收地址：</p>
+    </div>
+  </div>
+  <h4 class="ui header center aligned">订购场所信息</h4>
+  <div class="h4 head flex-around">
+    <div>
+      <p>放映单位名称：</p>
+      <p>放映场所名称：</p>
+      <p>放映场所类型：</p>
+    </div>
+    <div>
+      <p>服务器品牌型号：</p>
+      <p>放映机品牌型号：</p>
+      <p>服务器序列号：</p>
+    </div>
+    <div>
+      <p>影厅名称/影厅号：</p>
+      <p>对应影厅座位数：</p>
+      <p></p>
+    </div>
+  </div>
+  <br />
+  <div class="foot flex-between">
+    <div>
+      <p>推广文案：</p>
+      <p>商务合作洽谈咨询：邮箱地址</p>
+      <p>中影智慧点播院线（北京）有限公司网址：</p>
+    </div>
+    <img src="http://111.33.66.133/index/qrcode.jpeg" alt="">
+  </div>
+</div>
+
+<div class="ui print">
+  <h2 class="ui header center aligned">数字影片计次放映订购单（样本）</h2>
+  <div class="h4 head flex-between">
+    <div>
+      <p>放映场所名称：（盖章）</p>
+      <p>订购时间：</p>
+    </div>
+    <div>
+      <p>　</p>
+      <p>订单编号：XXXXXXXXXXXXXX</p>
+    </div>
+  </div>
+  <table class="ui bordered celled center aligned table">
+    <tbody>
+      <tr>
+        <td class="left aligned" colspan="6">
+          <div class="flex-between span">
+            <span>订购联系人：</span>
+            <span>手机电话：</span>
+            <span>密钥接收邮箱：</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="left aligned" colspan="6">硬盘接收地址：</td>
+      </tr>
+      <tr>
+        <td>厅号 / 影厅名称</td>
+        <td>影片名称</td>
+        <td>版本</td>
+        <td>放映时间</td>
+        <td>服务器序列号</td>
+        {{-- <td>单价（次 / 元）</td> --}}
+        <td>订购场次</td>
+        {{-- <td>金额（元）</td> --}}
+      </tr>
+      @each(entity in [0, 1, 2, 3, 4, 5])
+        <tr>
+          <td>　</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          {{-- <td>None</td> --}}
+          {{-- <td>None</td> --}}
+        </tr>
+      @endeach
+      <tr>
+        <td>合计：</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th class="left aligned" colspan="6">版本注解：影片的原版、译制版、普通话版、粤语版、2D、3D等。</th>
+      </tr>
+    </tfoot>
+  </table>
+  <div class="foot flex-between">
+    <div>
+      <p>推广文案：</p>
+      <p>商务合作洽谈咨询：邮箱地址</p>
+      <p>中影智慧点播院线（北京）有限公司网址：</p>
+    </div>
+    <img src="http://111.33.66.133/index/qrcode.jpeg" alt="">
+  </div>
+</div>

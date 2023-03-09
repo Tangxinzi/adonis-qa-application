@@ -1,0 +1,19 @@
+<b>平台管理</b>
+<div class="ui vertical pointing menu">
+  <a class="{{ data.active == 'question' ? 'item active' : 'item' }}" href="{{ route('Admin/QuestionController.index') }}">题库</a>
+  <a class="{{ data.active == 'user' ? 'item active' : 'item' }}" href="{{ route('Admin/UserController.index') }}">用户</a>
+  <a class="{{ data.active == 'page' ? 'item active' : 'item' }}" href="{{ route('Admin/PageController.index') }}">页面</a>
+  <a class="{{ data.active == 'comment' ? 'item active' : 'item' }}" href="{{ route('Admin/PageController.index') }}">评论</a>
+  <a class="{{ data.active == 'note' ? 'item active' : 'item' }}" href="{{ route('Admin/PageController.index') }}">笔记</a>
+  <a class="{{ data.active == 'course' ? 'item active' : 'item' }}" href="{{ route('Admin/PageController.index') }}">课程</a>
+</div>
+<b>记录</b>
+<div class="ui vertical pointing menu">
+  <a class="{{ data.active == 'coin' ? 'item active' : 'item' }}" href="{{ route('Admin/QuestionController.index') }}">积分使用</a>
+  <a class="{{ data.active == 'file' ? 'item active' : 'item' }}" href="{{ route('Admin/QuestionController.index') }}">文件上传</a>
+</div>
+<b>系统设置</b>
+<div class="ui vertical pointing menu">
+  <a class="{{ data.active == 'setting' ? 'item active' : 'item' }}" href="">设置</a>
+  <a class="item" href="">退出</a>
+</div>

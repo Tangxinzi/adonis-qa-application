@@ -1,0 +1,38 @@
+@layout('layouts.main')
+
+@section('title')
+  @!component('components.title', {
+    title: data.title
+  })
+@endsection
+
+@section('style')
+  {{ style('http://kindeditor.net/ke4/themes/default/default.css') }}
+@endsection
+
+@section('content')
+  @!component('components.navigator.nav', {
+    session
+  })
+  <div class="ui container">
+    <div class="ui grid">
+      @!component('components.slider', active=data.active, csrf=csrfField())
+      <div class="twelve wide column">
+        <h2 class="ui header">{{ data.title }}</h2>
+        @if(flashMessage('message'))
+          @!component('components.alert', {
+            type: [flashMessage('type')],
+            message: [flashMessage('message')]
+          })
+        @endif
+        <div class="ui form">
+
+        </div>
+      </div>
+    </div>
+  </div>
+@endsection
+
+@section('script')
+
+@endsection

@@ -1,0 +1,10 @@
+<div class="ui form pagination flex-between">
+  <div class="buttons">
+    <a class="ui left labeled icon button" href="?submit=pagination&page={{ data.request._qs.page - 1 || 1 }}">
+      <i class="chevron left icon"></i> 上一页
+    </a>
+    <a class="ui right labeled icon button" href="?submit=pagination&page={{ data.request._qs.page + 1 || 2 }}">
+      <i class="chevron right icon"></i> 下一页
+    </a>
+  </div>
+</div>

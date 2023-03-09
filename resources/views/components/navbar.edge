@@ -1,0 +1,59 @@
+<nav class="navbar">
+  <div class="ui container">
+    <div class="q-navbar">
+      <div class="q-lists left items">
+        <div class="menu item">
+          <i class="material-icons">menu</i>
+        </div>
+        <div class="item logo">
+          <a href="/"><img class="logo" src="/logo.png" alt="logo" /></a>
+        </div>
+        <div class="{{ data.active == 'job' ? 'item active' : 'item' }}">
+          <a href="{{ route('freelancer/JobController.index') }}">需求池</a>
+        </div>
+        <div class="{{ data.active == 'talent' ? 'item active' : 'item' }}">
+          <a href="{{ route('freelancer/UserController.talent') }}">人才库</a>
+        </div>
+        <div class="{{ data.active == 'article' ? 'item active' : 'item' }}">
+          <a href="{{ route('freelancer/ArticleController.index') }}">共享笔记</a>
+        </div>
+        <div class="{{ data.active == 'work' ? 'item active' : 'item' }}">
+          <a href="{{ route('freelancer/WorkController.index') }}">技能作品</a>
+        </div>
+      </div>
+      <div class="q-lists content items">
+        <div class="item logo">
+          <a href="/"><img style="height: 40px" src="/logo.png" alt="logo" /></a>
+        </div>
+      </div>
+      <div class="q-lists right items">
+        <div class="item search">
+          <form class="ui form" action="{{ route('freelancer/SearchController.index') }}" method="post">
+            <div class="ui icon input">
+              <input type="text" name="keyword" value="" placeholder="搜索..." />
+              <i class="search icon"></i>
+            </div>
+            {{ csrf }}
+          </form>
+        </div>
+        <a class="item message" href="{{ route('freelancer/MessageController.index') }}">
+          <i class="bell large icon"></i>
+        </a>
+        <a class="item contact" href="{{ route('freelancer/ContactController.index') }}">
+          <i class="comments large icon"></i>
+        </a>
+        <a class="item upload">
+          <i class="upload large icon"></i>
+        </a>
+        <div class="ui custom popup transition hidden" style="text-align: center;">
+          <a href="{{ route('client/JobController.create') }}" style="margin-bottom: 20px; display: inline-block;">需求</a><br />
+          <a href="{{ route('freelancer/ArticleController.create') }}" style="margin-bottom: 20px; display: inline-block;">共创专栏</a><br />
+          <a href="{{ route('freelancer/WorkController.create') }}">技能作品</a>
+        </div>
+        <a class="item user" href="{{ route('freelancer/UserController.index') }}">
+          <i class="user large icon"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售管理</title>
+    <link rel="stylesheet" href="https://semantic-ui.com/dist/semantic.min.css">
+    <script src="https://semantic-ui.com/javascript/library/jquery.min.js" charset="utf-8"></script>
+    <script src="https://semantic-ui.com/dist/semantic.min.js" charset="utf-8"></script>
+    <style media="screen">
+      body, input, textarea { font-size: 13px; font-family: "宋体"; }
+      .container { position: relative; width: 900px; margin: 0 auto; padding: 10px; }
+      .navbar { background-color: grey; padding: 0 10px; margin-bottom: 8px; }
+      .navbar a { text-decoration: none; color: #FFF; padding: 10px; display: inline-block; }
+      .ui.dropdown .dropdown.icon { margin-left: 3px; }
+      .ui.dropdown .menu>.item { width: 100%;}
+      .sign .ui.label { margin-right: 0 !important; }
+
+      .ui.selection.dropdown, .ui.fluid.dropdown>.dropdown.icon { min-height: auto; padding: 0; transition: none; border: none; }
+      .ui.search.selection.dropdown>input.search { padding: 0 3px; }
+      .ui.multiple.dropdown { padding: 0; text-align: center;}
+      .row2 { text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -moz-box; -moz-line-clamp: 2; -moz-box-orient: vertical; overflow-wrap: break-word; word-break: break-all; white-space: normal; overflow: hidden; }
+
+      /* 表单 */
+      .header .form { display: flex; align-items: center; justify-content: space-between; }
+      form.form { padding-bottom: 150px; }
+      form.form input { width: 100%; text-align: center; border: none; }
+      .circular.ui.blue.button { position: sticky; margin-top: 30px; bottom: 100px; left: 48%; }
+
+      /* 表格样式 */
+      td { border: solid rgb(45, 45, 45); border-left-width: 0.4pt; border-top-width: 0.4pt; border-right-width: 0; border-bottom-width: 0; }
+      .order-sale { display: flex; align-items: flex-end; flex-direction: row; }
+      .table { text-align: center; font-family: "宋体"; border: solid rgb(45, 45, 45); border-left-width: 0pt; border-top-width: 0pt; border-right-width: 0.4pt; border-bottom-width: 0.4pt; }
+      .table .td { padding: 3px 5px; }
+      .table .td .priceValue { text-align: right !important; display: block; width: 100%; }
+      .com .td { padding: 2px 8px; }
+      .com span { display: inline-block; width: 100%; text-align: center; }
+      .sign .td { height: 60px; padding: 0; width: 90px; }
+      .order-info { display: flex; margin-bottom: 8px; }
+      .order-info .left-table { width: 58%; display: flex; justify-content: space-between; flex-direction: column; }
+      .order-info .right-table { width: 39%; margin-left: 3%; }
+      .four, .three, .two { display: flex; justify-content: space-between; margin-bottom: 7px; }
+      .four .item { width: 24%; position: relative;; }
+      .four span { text-align: center; width: 58px; display: inline-block; float: right;}
+      .three .item { width: 30%; }
+      .three.ext .item { display: flex; }
+      .three.ext .item span { margin-right: 5px; font-size: 14px; line-height: 13px; position: relative; top: 3px; }
+      .description p { margin: 5px; }
+      .description .border { border: 0.4pt solid #000; height: 151px; line-height: 151px; padding: 0; }
+      .description span { margin-right: 5px; font-size: 14px; }
+      .ui.search.dropdown>.text { text-align: center !important; width: 100%; }
+      .description textarea { background-color: transparent; }
+    </style>
+    <style media="print">
+      @media print {
+        @page { size: A4 portrait; margin-top: 20px; margin-left: 8mm; margin-right: 8mm; margin-bottom: 0; }
+        body, input, textarea { position: relative; font-size: 10px; font-family: "宋体"; }
+        .container { position: relative; }
+        .none { display: none !important; }
+        .row2 { text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -moz-box; -moz-line-clamp: 2; -moz-box-orient: vertical; overflow-wrap: break-word; word-break: break-all; white-space: normal; overflow: hidden; }
+        form.form input { width: 100%; text-align: center; border: none; }
+        .ui.dropdown .dropdown.icon { display: none; }
+        .ui.search.dropdown>.text { text-align: center !important; width: 100%; }
+        .navbar, .header { display: none; }
+        /* .td input { width: 80px; display: none; text-align: center; border: none; } */
+        .ui.dropdown { display: flex; align-items: center; justify-content: center; }
+        /* .form .td { display: flex; align-items: center; justify-content: center; } */
+        .form .ui.label { font-size: 0; margin: 0; padding: 0; display: inline !important; align-items: center; justify-content: center; }
+        .ui.selection.dropdown, .ui.fluid.dropdown>.dropdown.icon { min-height: auto; padding: 0; transition: none; border: none; }
+        .ui.search.selection.dropdown>input.search { padding: 0 3px; }
+        .ui.default.dropdown:not(.button)>.text, .ui.dropdown:not(.button)>.default.text { color: #FFF !important; }
+        .ui.multiple.dropdown>.label { box-shadow: none; font-size: 0 !important; }
+        .ui.multiple.dropdown>.label img { width: 26px; height: 26px; display: block; margin: 0 auto; font-size: 20px; }
+        .default.text { color: #FFF;}
+        .table { text-align: center; font-family: "宋体"; }
+        td { border: solid rgb(45, 45, 45); border-left-width: 0.4pt; border-top-width: 0.4pt; border-right-width: 0; border-bottom-width: 0; }
+        .order-sale { display: flex; align-items: flex-end; flex-direction: row; }
+        .table { text-align: center; font-family: "宋体"; border: solid rgb(45, 45, 45); border-left-width: 0pt; border-top-width: 0pt; border-right-width: 0.4pt; border-bottom-width: 0.4pt; }
+        .table .td { padding: 3px 5px; }
+        .com span { display: inline-block; width: 100%; text-align: center; }
+        .sign .td { height: 60px; padding: 0; width: 90px; }
+        .sign .td .ui.multiple.dropdown { display: flex !important; margin: 0 !important; }
+        .sign .td .ui.multiple.dropdown img { position: relative; left: 14px; }
+        .sign .td .default.text { display: none !important; }
+        .order-info { display: flex; }
+        .order-info .left-table { width: 58%; display: flex; justify-content: space-between; flex-direction: column; }
+        .order-info .right-table { width: 39%; margin-left: 3%; }
+        .four, .three, .two { display: flex; justify-content: space-between; margin-top: 10px; }
+        .four .item { width: 24%; position: relative;; }
+        .four span { text-align: center; width: 58px; display: inline-block; float: right; }
+        .three .item { width: 30%; }
+        .three.ext .item { display: flex; }
+        .three.ext .item span { margin-right: 5px; line-height: 13px; position: relative; top: 0px; }
+        .description { position: relative; }
+        .description p { margin: 7px 5px 0; }
+        .description .border { position: absolute; bottom: -161px; width: 100%; border: 0.4pt solid #000; height: 161px; line-height: 161px; padding: 0; }
+        .description span { margin-right: 5px;}
+        .description textarea { width: 100%; background-color: transparent; }
+        i.icon { display: none;}
+        .unit.td { width: 50px; text-align: center; }
+        .other.td { width: 90px; }
+        .title.td { width: 90px !important; }
+        .table .td .priceValue { text-align: right !important; display: block; width: 100%; }
+        .circular.ui.blue.button { display: none; }
+        textarea { width: 70% !important; }
+      }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <div class="navbar items">
+      <a class="item" href="/order">销售管理</a>
+      <a class="item" href="/order/history">销售保存</a>
+      <a class="item" href="/lists">订单明细</a>
+    </div>
+    <div class="header">
+      <div class="form">
+        <h2 style="flex: 1; margin: 0">销售管理</h2>
+        <div class="ui selection dropdown price" style="border: 1px solid rgba(34,36,38,.15); padding: .78571429em 2.1em .78571429em 1em; margin-right: 10px;">
+          <input type="hidden" name="isPrice">
+          <i class="dropdown icon"></i>
+          <div class="default text">是否显示金额</div>
+          <div class="menu">
+            <div class="item" data-value="1">是</div>
+            <div class="item" data-value="0">否</div>
+          </div>
+        </div>
+        <form class="" action="#" method="POST">
+          <div class="ui action input" style="margin-right: 10px; ">
+            <input type="text" style="width: 200px;" name="cSOCode" placeholder="搜索销售订单号（制造编号）" value="{{ data.cSOCode || '' }}" />
+            <button class="ui button" type="submit" name="button">提交</button>
+          </div>
+          {{ csrfField() }}
+        </form>
+        <button class="ui button" onclick="printOrder()">打印预览</button>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    {{-- 订单 --}}
+    <div class="order-sale" style="margin-bottom: 8px;">
+      <table class="table" style="margin-right: 10px;" cellpadding="0" cellspacing="0" width="72%">
+        <tbody>
+          <tr>
+            <td class="td">总经理</td>
+            <td class="td">副总经理</td>
+            <td class="td">管理部</td>
+            <td class="td" style="width: 150px">质管技术</td>
+            <td class="td">担当</td>
+          </tr>
+          <tr class="sign">
+            @each(row in [0, 1, 2, 3, 4])
+              <td class="td">
+                <div class="ui multiple dropdown">
+                  <input type="hidden" name="country" value="{{row == 1 ? '02' : ''}}{{row == 2 ? '03' : ''}}{{row == 3 ? '04,05' : '' }}{{row == 4 ? '06' : '' }}">
+                  <div class="default text">选择</div>
+                  <i class="dropdown icon"></i>
+                  <div class="menu">
+                    <div class="item" data-value="01">
+                      <img src="/sign/1总经理何良军.jpg" />
+                    </div>
+                    <div class="item" data-value="02">
+                      <img src="/sign/2副总经理竹中.jpg" />
+                    </div>
+                    <div class="item" data-value="03">
+                      <img src="/sign/3管理部长李凡.jpg" />
+                    </div>
+                    <div class="item" data-value="04">
+                      <img src="/sign/4质管技术部长福田.jpg" />
+                    </div>
+                    <div class="item" data-value="05">
+                      <img src="/sign/5质管技术副部长齐志轩.jpg" />
+                    </div>
+                    <div class="item" data-value="06">
+                      <img src="/sign/6管理部营业担当姜晶晶.jpg" />
+                    </div>
+                    <div class="item" data-value="07">
+                      <img src="/sign/7管理部营业担当谢明珏.jpg" />
+                    </div>
+                    <div class="item" data-value="08">
+                      <img src="/sign/8管理部营业担当程萌.jpg" />
+                    </div>
+                  </div>
+                </div>
+              </td>
+            @endeach
+          </tr>
+        </tbody>
+      </table>
+      <div class="com" style="flex: 1;">
+        <span style="font-weight: 800; font-size: 13.5px;">酉岛泵（天津）有限公司</span>
+        <span style="margin: 1px; font-weight: 800; font-size: 13.5px;">销售订单</span>
+        <table class="table" cellpadding="0" cellspacing="0" width="100%">
+          <tbody>
+            <tr>
+              <td class="td title" width="80px">制造编号</td>
+              <td class="td">{{ data.SO_SOMain.cSOCode || '' }}</td>
+            </tr>
+            <tr>
+              <td class="td title">销售类型</td>
+              <td class="td">
+                {{--  <input style="width: 100px; text-align: center; border: none;" type="text" name="" value="">  --}}
+
+                <div class="ui dropdown">
+                  <div class="text">{{ data.saleTypeValue }}</div>
+                  <i class="dropdown icon"></i>
+                  <div class="menu">
+                    @each(row in data.saleType)
+                    <div class="item">{{ row.cSTName }}</div>
+                    @endeach
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <form class="form" method="POST" action="{{ route('OrderController.history') }}">
+      <input type="text" hidden name="cSOCode" value="{{ data.SO_SOMain.cSOCode || '' }}">
+      <input type="text" hidden name="cDefine2" value="{{ data.SO_SOMain.cDefine2 || '' }}">
+      <input type="text" hidden name="loki" value="{{ data.all.id || '' }}">
+      
+      {{-- 其它信息 --}}
+      <table class="table" style="margin-bottom: 8px;" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+          <tr>
+            <td class="td title other" width="80px" style="height: 40px;">报价编号</td>
+            <td class="td" style="text-align: left;">{{ data.SO_SOMain.cDefine1 || '' }}</td>
+            <td class="td title other" width="80px">订单编号</td>
+            <td class="td" width="150px" style="text-align: left;">
+              <span class="row2">{{ data.SO_SOMain.cDefine10 || '' }}</span>
+            </td>
+            <td class="td title other" width="80px">变更日期</td>
+            <td class="td" width="150px">
+              <input type="text" name="bgrq" value="{{ data.collection.bgrq || '' }}">
+            </td>
+          </tr>
+          <tr>
+            <td class="td title other" width="80px" style="height: 40px;">收货人</td>
+            <td class="td">
+              <div id="shrSpan" class="row2" style="display: none;"></div>
+              <input id="shr" type="text" style="text-align: left;" name="shr" value="{{ data.collection.shr || '' }}">
+            </td>
+            <td class="td title other" width="80px">合同编号</td>
+            <td class="td" width="150px" style="text-align: left;">
+              <div id="htbhSpan" class="row2" style="display: none;"></div>
+              {{--  <textarea name="htbh" id="" cols="" rows="" autoHeight="true">{{ data.collection.htbh || '' }}</textarea>  --}}
+              <input type="text" name="htbh" id="htbh" style="text-align: left;" value="{{ data.collection.htbh || '' }}">
+            </td>
+            <td class="td title other" width="80px">版本号</td>
+            <td class="td">
+              <input type="text" name="bbh" value="{{ data.collection.bbh || '' }}">
+            </td>
+          </tr>
+          <tr>
+            <td class="td title other" style="height: 40px;">收货地址</td>
+            <td class="td" colspan="5" style="text-align: left;">
+              <span>{{ data.SO_SOMain.cCusOAddress || '' }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="order-info">
+        <div class="left-table">
+          <table class="table" style="margin-bottom: 8px;" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+              <tr>
+                <td class="td title" width="80px">订货方</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.cCusName || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title" width="80px">总订货方</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.cCusName || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title" width="80px">最终收货方</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.cDefine11 || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title" width="80px">工程名称</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.cDefine2 || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title" width="80px">销售人员</td>
+                <td class="td" style="text-align: left;">
+                  <input type="text" style="text-align: left;" name="xsry" value="{{ data.collection.xsry || '' }}">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+              <tr>
+                <td class="td title" width="80px">订单日期</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.dDate || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title">出厂日期</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.dPreMoDateBT || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title">订单货期</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.dPreDateBT || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title">质保期</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.cDefine12 || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title">罚金</td>
+                <td class="td" style="text-align: left;">{{ data.SO_SOMain.cDefine13 || '' }}</td>
+              </tr>
+              <tr>
+                <td class="td title">发货方法</td>
+                <td class="td" style="text-align: left;">{{ data.ShippingChoice.cSCName || '' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="flex: 1; display: flex; align-items: flex-end;">
+            <div style="width: 100%; display: flex; align-items: flex-start;">
+              <table class="table" style="margin-right: 10px;" cellpadding="0" cellspacing="0" width="100%">
+                <tbody>
+                  <tr>
+                    <td class="td" width="80px">型号</td>
+                    <td class="td"><input style="text-align: left;" type="text" name="xh" value="{{ data.collection.xh || '' }}"></td>
+                  </tr>
+                  <tr>
+                    <td class="td">口径</td>
+                    <td class="td"><input style="text-align: left;" type="text" name="kj" value="{{ data.collection.kj || '' }}"></td>
+                  </tr>
+                  </tr>
+                  <tr>
+                    <td class="td">水力</td>
+                    <td class="td"><input style="text-align: left;" type="text" name="sl" value="{{ data.collection.sl || '' }}"></td>
+                  </tr>
+                  <tr>
+                    <td class="td">规格书</td>
+                    <td class="td"><input style="text-align: left;" type="text" name="ggs" value="{{ data.collection.ggs || '' }}"></td>
+                  </tr>
+                  <tr>
+                    <td class="td">台数</td>
+                    <td class="td"><input style="text-align: left;" type="text" name="taishu" value="{{ data.collection.taishu || '' }}"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table" style="margin-left: 10px;" cellpadding="0" cellspacing="0" width="100%">
+                <tbody>
+                  <tr>
+                    <td class="td" width="80px">铭牌</td>
+                    <td class="td"><input style="text-align: left;" type="text" name="mp" value="{{ data.collection.mp || '' }}"></td>
+                  </tr>
+                  <tr>
+                    <td class="td">号机</td>
+                    <td class="td"><input style="text-align: left;" type="text" name="hj" value="{{ data.collection.hj || '' }}"></td>
+                  </tr>
+                  <tr>
+                    <td class="td">旧制造编号</td>
+                    <td class="td"><input style="text-align: left;" type="text" name="jzzbh" value="{{ data.collection.jzzbh || '' }}"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="right-table">
+          <table class="table" style="margin-bottom: 8px;" cellpadding="0" cellspacing="0"  width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="150px">订单金额(含税)</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.Sui.shuijiaheji || '' }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">订单金额(无税)</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.Sui.wushuijine || '' }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">增值税</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.Sui.shuie || '' }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          (上记详细)
+          <table class="table" style="margin-bottom: 8px;" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="44px">0</td>
+                <td class="td" width="106px">泵本体</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.price[0] }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">1</td>
+                <td class="td">备件</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.price[1] }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">2</td>
+                <td class="td">配件</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.price[2] }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">3</td>
+                <td class="td">派遣费</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.price[3] }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">4</td>
+                <td class="td">运费</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.price[4] }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">5</td>
+                <td class="td">其他</td>
+                <td class="td">
+                  <span class="priceValue">{{ data.price[5] }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="44px">No.</td>
+                <td class="td">百分比</td>
+                <td class="td" width="90px">进款预定额</td>
+                <td class="td" width="90px">进款予定日</td>
+              </tr>
+              @each(row in [0, 1, 2, 3, 4])
+                <tr>
+                  <td class="td">{{ $loop.index + 1 }}</td>
+                  <td class="td">
+                    <input class="span-input span-input-{{ $loop.index + 1 }}" data-id="{{ $loop.index + 1 }}" type="text" name="bfb[]" value="{{ data.collection.bfb[$loop.index] || '' }}">
+                  </td>
+                  <td class="td">
+                    <input id="span-input-{{ $loop.index + 1 }}" class="priceValue" type="text" name="jkyde[]" value="{{ data.collection.jkyde[$loop.index] || '' }}">
+                  </td>
+                  <td class="td">
+                    <input type="text" name="jkydr[]" value="{{ data.collection.jkydr[$loop.index] || '' }}">
+                  </td>
+                </tr>
+              @endeach
+              <tr>
+                <td class="td" colspan="2">币种</td>
+                <td class="td">原货币金额</td>
+                <td class="td">人民币金额</td>
+              </tr>
+              <tr>
+                <td class="td" colspan="2">
+                  {{ data.SO_SOMain.cexch_name || '　' }}
+                  <div class="ui fluid dropdown search allowAdditions selection upward" style="display: none">
+                    <div class="text">人民币</div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item">人民币</div>
+                      <div class="item">日元</div>
+                      <div class="item">欧元</div>
+                      <div class="item">美元</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="td">
+                  <span class="priceValue">{{ data.Sui.shuijiaheji || '' }}</span>
+                  {{--  <input id="money" onchange="moneyChange()" class="priceValue" type="text" name="yhbje" value="{{ data.collection.yhbje || '' }}">  --}}
+                </td>
+                <td class="td" title="税率 {{ data.SO_SOMain.iExchRate }}">
+                  <span class="priceValue">{{ data.Sui._rmbje || '' }}</span>
+                  {{--  <input type="text" id="moneyText" class="priceValue" name="rmbje" value="{{ data.collection.rmbje || '' }}">  --}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="four">
+        <div class="item">
+          <table class="table" cellpadding="0" cellspacing="0"  width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="70px">全扬程</td>
+                <td class="td">
+                  <input type="text" name="qyc" value="{{ data.collection.qyc || '' }}">
+                </td>
+                <td class="unit td" width="70px">
+                  <select class="ui fluid dropdown search allowAdditions" name="dw01">
+                    <option value="m" {{ data.collection.dw01 == 'm' ? 'selected' : '' }}>m</option>
+                    <option value="MPa" {{ data.collection.dw01 == 'MPa' ? 'selected' : '' }}>MPa</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">流量</td>
+                <td class="td">
+                  <input type="text" name="ll" value="{{ data.collection.ll || '' }}">
+                </td>
+                <td class="unit td">
+                  <select class="ui fluid dropdown search allowAdditions" name="dw02">
+                    <option value="m³/h" {{ data.collection.dw02 == 'm³/h' ? 'selected' : '' }}>m³/h</option>
+                    <option value="t/h" {{ data.collection.dw02 == 't/h' ? 'selected' : '' }}>t/h</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">转速</td>
+                <td class="td"><input type="text" name="zs" value="{{ data.collection.zs || '' }}"></td>
+                <td class="unit td">min⁻¹</td>
+              </tr>
+              <tr>
+                <td class="td">电机容量</td>
+                <td class="td"><input type="text" name="djrl" value="{{ data.collection.djrl || '' }}"></td>
+                <td class="unit td">kW</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="item">
+          <table class="table" cellpadding="0" cellspacing="0"  width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="70px">吸入压力</td>
+                <td class="td">
+                  <input type="text" name="xryl" value="{{ data.collection.xryl || '' }}">
+                </td>
+                <td class="unit td" width="84px">
+                  <select class="ui fluid dropdown search allowAdditions" name="dw03">
+                    <option value="Mpa(G)" {{ data.collection.dw03 == 'Mpa(G)' ? 'selected' : '' }}>Mpa(G)</option>
+                    <option value="bar(G)" {{ data.collection.dw03 == 'bar(G)' ? 'selected' : '' }}>bar(G)</option>
+                    <option value="Mpa(A)" {{ data.collection.dw03 == 'Mpa(A)' ? 'selected' : '' }}>Mpa(A)</option>
+                    <option value="bar(A)" {{ data.collection.dw03 == 'bar(A)' ? 'selected' : '' }}>bar(A)</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">吐出压力</td>
+                <td class="td">
+                  <input type="text" name="tcyl" value="{{ data.collection.tcyl || '' }}">
+                </td>
+                <td class="unit td">
+                  <select class="ui fluid dropdown search allowAdditions" name="dw04">
+                    <option value="Mpa(G)" {{ data.collection.dw04 == 'Mpa(G)' ? 'selected' : '' }}>Mpa(G)</option>
+                    <option value="bar(G)" {{ data.collection.dw04 == 'bar(G)' ? 'selected' : '' }}>bar(G)</option>
+                    <option value="Mpa(A)" {{ data.collection.dw04 == 'Mpa(A)' ? 'selected' : '' }}>Mpa(A)</option>
+                    <option value="bar(A)" {{ data.collection.dw04 == 'bar(A)' ? 'selected' : '' }}>bar(A)</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">NPSH<small style="transform: scale(0.7); display: inline-block; position: relative; top: 1px;">3</small></td>
+                <td class="td">
+                  <input type="text" name="npsh3" value="{{ data.collection.npsh3 || '' }}">
+                </td>
+                <td class="unit td">m</td>
+              </tr>
+              <tr>
+                <td class="td">NPSH<small style="transform: scale(0.7); display: inline-block; position: relative; top: 1px;">av</small></td>
+                <td class="td">
+                  <input type="text" name="npshav" value="{{ data.collection.npshav || '' }}">
+                </td>
+                <td class="unit td">m</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="item">
+          <table class="table" cellpadding="0" cellspacing="0"  width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="70px">温度</td>
+                <td class="td">
+                  <input type="text" name="wd" value="{{ data.collection.wd || '' }}">
+                </td>
+                <td class="unit td" width="90px">℃</td>
+              </tr>
+              <tr>
+                <td class="td">密度</td>
+                <td class="td">
+                  <input type="text" name="md" value="{{ data.collection.md || '' }}">
+                </td>
+                <td class="unit td">
+                  <select class="ui fluid dropdown search allowAdditions" name="dw05">
+                    <option value="Kg/m³" {{ data.collection.dw05 == 'Kg/m³' ? 'selected' : '' }}>Kg/m³</option>
+                    <option value="g/cm³" {{ data.collection.dw05 == 'g/cm³' ? 'selected' : '' }}>g/cm³</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">PH</td>
+                <td class="td">
+                  <input type="text" name="ph" value="{{ data.collection.ph || '' }}">
+                </td>
+                <td class="unit td"></td>
+              </tr>
+              <tr>
+                <td class="td">粘度</td>
+                <td class="td">
+                  <input type="text" name="nd" value="{{ data.collection.nd || '' }}">
+                </td>
+                <td class="unit td">Mpa.s</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="item">
+          <table class="table" cellpadding="0" cellspacing="0"  width="100%">
+            <tbody>
+              <tr>
+                <td class="td">行业</td>
+                <td class="td" width="90px">
+                  <select class="ui fluid dropdown search allowAdditions" name="dw06">
+                    <option value="null" {{ data.collection.dw06 == 'null' ? 'selected' : '' }}></option>
+                    <option value="CCPP" {{ data.collection.dw06 == 'CCPP' ? 'selected' : '' }}>CCPP</option>
+                    <option value="CDQ" {{ data.collection.dw06 == 'CDQ' ? 'selected' : '' }}>CDQ</option>
+                    <option value="I&S" {{ data.collection.dw06 == 'I&S' ? 'selected' : '' }}>I&S</option>
+                    <option value="WIPP" {{ data.collection.dw06 == 'WIPP³' ? 'selected' : '' }}>WIPP</option>
+                    <option value="AI" {{ data.collection.dw06 == 'AI' ? 'selected' : '' }}>AI</option>
+                    <option value="NF" {{ data.collection.dw06 == 'NF' ? 'selected' : '' }}>NF</option>
+                    <option value="PAPER" {{ data.collection.dw06 == 'PAPER' ? 'selected' : '' }}>PAPER</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="td">用途</td>
+                <td class="td">
+                  <input type="text" name="yt" value="{{ data.collection.yt || '' }}">
+                </td>
+              </tr>
+              <tr>
+                <td class="td">液质名称</td>
+                <td class="td">
+                  <input type="text" name="yzmc" value="{{ data.collection.yzmc || '' }}">
+                </td>
+              </tr>
+              <tr>
+                <td class="td">安装场所</td>
+                <td class="unit td">
+                  <select class="ui fluid dropdown search allowAdditions" name="dw07">
+                    <option value="null" {{ data.collection.dw07 == 'null' ? 'selected' : '' }}></option>
+                    <option value="shinei" {{ data.collection.dw07 == 'shinei' ? 'selected' : '' }}>室内</option>
+                    <option value="shiwai" {{ data.collection.dw07 == 'shiwai' ? 'selected' : '' }}>室外</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="two">
+        <table class="table" cellpadding="0" cellspacing="0"  width="20%">
+          <tbody>
+            <tr>
+              <td class="td" width="80px" rowspan="2">提交资料</td>
+              <td class="td">部数</td>
+            </tr>
+            <tr>
+              <td class="td">
+                <input type="text" name="tjzl" value="{{ data.collection.tjzl || '' }}">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table" style="margin-left: 2%;" cellpadding="0" cellspacing="0"  width="78%">
+          <tbody>
+            <tr>
+              <td class="td" width="40px" rowspan="2">电机</td>              
+              <td class="td" width="80px">提供</td>
+              <td class="td" width="80px">台数</td>
+              <td class="td" width="80px">来否</td>
+              <td class="td" width="80px">极数</td>
+              <td class="td" width="80px">HZ</td>
+              <td class="td" width="80px">变频</td>
+              <td class="td" width="80px">电压</td>
+              <td class="td" width="80px">厂家</td>
+            </tr>
+            <tr>
+              <td class="td">
+                <select class="ui fluid dropdown search allowAdditions" name="select01">
+                  <option value="null" {{ data.collection.select01 == 'null' ? 'selected' : '' }}></option>
+                  <option value="goumai" {{ data.collection.select01 == 'goumai' ? 'selected' : '' }}>购买</option>
+                  <option value="kehu" {{ data.collection.select01 == 'kehu' ? 'selected' : '' }}>客户</option>
+                </select>
+              </td>
+              <td class="td">
+                <input type="text" name="ts" value="{{ data.collection.ts || '' }}">
+              </td>
+              <td class="td">
+                <input type="text" name="lf" value="{{ data.collection.lf || '' }}">
+              </td>
+              <td class="td">
+                <input type="text" name="js" value="{{ data.collection.js || '' }}">
+              </td>
+              <td class="td">
+                <input type="text" name="hz" value="{{ data.collection.hz || '' }}">
+              </td>
+              <td class="td">
+                <select class="ui fluid dropdown search allowAdditions" name="select02">
+                  <option value="null" {{ data.collection.select02 == 'null' ? 'selected' : '' }}></option>
+                  <option value="shi" {{ data.collection.select02 == 'shi' ? 'selected' : '' }}>是</option>
+                  <option value="fou" {{ data.collection.select02 == 'fou' ? 'selected' : '' }}>否</option>
+                </select>
+              </td>
+              <td class="td">
+                <input type="text" name="dy" value="{{ data.collection.dy || '' }}">
+              </td>
+              <td class="td">
+                <input type="text" name="cj" value="{{ data.collection.cj || '' }}">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="three ext">
+        <div class="item">
+          <span>*<br />*</span>
+          <table class="table" cellpadding="0" cellspacing="0"  width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="80px">见证试验</td>
+                <td class="td"><input type="text" name="jzsy" value="{{ data.collection.jzsy || '' }}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="item">
+          <span>*<br />*</span>
+          <table class="table" cellpadding="0" cellspacing="0"  width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="80px">外部涂装</td>
+                <td class="td"><input type="text" name="wbtz" value="{{ data.collection.wbtz || '' }}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="item">
+          <span>*<br />*</span>
+          <table class="table" cellpadding="0" cellspacing="0"  width="100%">
+            <tbody>
+              <tr>
+                <td class="td" width="80px">QCP</td>
+                <td class="td"><input type="text" name="qcp" value="{{ data.collection.qcp || '' }}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="description">
+        <p><span>*</span>实施见证试验跟特殊涂装时需要另外报价(见证试验检查的标准为性能试验) </p>
+        <p><span>*</span>配件的配对法兰的标准配备附螺栓、螺母、密封垫</p>
+        <div class="border">
+          <textarea rows="10" style="resize: none; width: 98%; text-align: left; border: none;" type="text" name="description" value="">{{ data.collection.description || '' }}</textarea>
+        </div>
+      </div>
+
+      {{ csrfField() }}
+      <button class="circular ui blue button" type="submit" name="button" value="{{ data.all.id ? 'update' : 'save' }}">{{ data.all.id ? '更新查询' : '保存查询' }}</button>
+    </form>
+  </div>
+  <div class="ui tiny industry modal">
+    <i class="close icon"></i>
+    <div class="header">
+      输入行业名称
+    </div>
+    <div class="content">
+      <div class="ui action fluid input">
+        <input class="ui focus input input-industry" type="text" name="input-industry" value="" />
+        <div class="ui button" onclick="submiInputIndustry()">提交</div>
+      </div>
+    </div>
+  </div>
+  <div class="ui tiny provide modal">
+    <i class="close icon"></i>
+    <div class="header">
+      输入提供名称
+    </div>
+    <div class="content">
+      <div class="ui action fluid input">
+        <input class="ui focus input input-provide" type="text" name="input-provide" value="" />
+        <div class="ui button" onclick="submiInputProvide()">提交</div>
+      </div>
+    </div>
+  </div>
+  <div class="ui mini modal">
+    <div class="header">提示</div>
+    <div class="content">
+      <p>您搜索的销售订单号 {{ data.cSOCode }} 无数据。</p>
+    </div>
+    <div class="actions">
+      <div class="ui positive right labeled icon button">
+        确定
+        <i class="checkmark icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    @if(!data.SO_SOMain)
+      $('.mini.modal').modal('show')
+    @endif
+
+    @if(flashMessage('alert'))
+      alert("{{ flashMessage('alert') }}")
+    @endif    
+
+    $(document).ready(function () {
+        var input = $("#div").find("input[type='text']");
+        input.each(function () {
+            var inpval = $(this).val();
+            $(this).attr("value", inpval);
+            this.style.whiteSpace = 'normal';
+            $(this).css({"white-space": "normal", "word-wrap": "break-word",
+                "word-break": "break-all","height": "auto","min-height" : "34px","padding": "10px 0px"});
+            //white-space:normal;word-wrap:break-word;word-break:break-all
+
+            var inptext = $(this).prop("outerHTML");
+            inptext = inptext.replace('"text"', '"reset"');
+            $(this).parent().append(inptext);
+            $(this).remove();
+            //$(this).parent().append($(this).val());
+            //$(this).remove();
+            //$(this).width(textWidth($(this).val()));
+        })
+    })
+    
+    $('.ui.dropdown').dropdown()
+
+    $('.ui.multiple.dropdown').dropdown({
+      allowAdditions: true
+    })
+
+    $(".ui.selection.allowAdditions").dropdown({
+      fullTextSearch: true,
+      ignoreCase: true,
+      allowAdditions: true,
+      forceSelection: false,
+      hideAdditions: false,
+      onChange: function(value, text, $choice) {
+
+      },
+    });
+
+    $(".ui.selection.dropdown.price").dropdown({
+      onChange: function(value, text, $choice) {
+        if (text == '否') {
+          $('.priceValue').css({ 'display': 'none' })
+        } else {
+          $('.priceValue').css({ 'display': 'inline' })
+        }
+      },
+    });
+
+    $('.ui.industry.dropdown').dropdown('hide').dropdown({
+      action: function(text, value) {
+        $('.ui.industry.dropdown .text').text(text)
+        if (value == 'industry') {
+          $('.ui.modal.industry').modal('show')
+        }
+
+        if (value == 'provide') {
+          $('.ui.modal.provide').modal('show')
+        }
+      }
+    })
+
+    function submiInputIndustry () {
+      if ($('.input-industry').val()) {
+        $('.ui.industry.dropdown').css('display', 'none')
+        $('.industry.cus-input').css('display', 'flex')
+        $('.industry.cus-input .text').text($('.input-industry').val())
+        $('.ui.modal.industry').modal('hide')
+      } else {
+        alert('请输入有效内容。')
+      }
+    }
+
+    function clearIndustryInput () {
+      $('.ui.industry.dropdown').css('display', 'inline-block')
+      $('.industry.cus-input').css('display', 'none')
+      $('.industry.cus-input .text').text('')
+    }
+
+    // 普通数字转会计金额格式 第一种
+    function toThousandsFormates(num) {
+        // 判断传进来的数字是否为非空数字
+        if (!isNaN(parseFloat(num))) {
+            var newNum = Number(Number(num).toFixed(2)).toLocaleString('zh', { minimumFractionDigits: 2 })
+            return newNum
+
+        } else {
+            return ''
+        }
+    }
+
+    function toThousandsFormates2(num) {
+      // 判断传进来的数字是否为非空数字
+      if (!isNaN(parseFloat(num))) {
+        var newNum = Number(Number(num).toFixed(2)).toLocaleString('zh', { minimumFractionDigits: 2 })
+        return newNum
+      } else {
+        return ''
+      }
+    }
+
+    function rMoney(num) {
+      return num.split(',').join('');
+    }
+
+    function moneyChange () {
+      var thisTxt = $("#money").val();
+      thisTxt = parseFloat(rMoney(thisTxt.toString()))
+      $('#moneyText').val(toThousandsFormates2(thisTxt * {{ data.SO_SOMain.iExchRate || 0 }}))
+      $("#money").val(toThousandsFormates2(thisTxt))
+    }
+
+    $('.ui.provide.dropdown').dropdown({
+      action: function(text, value) {
+        $('.ui.provide.dropdown .text').text(text)
+        if (value == 'provide') {
+          $('.ui.modal.provide').modal('show')
+        }
+
+        if (value == 'provide') {
+          $('.ui.modal.provide').modal('show')
+        }
+      }
+    }).dropdown('hide')
+
+    // $("#money").bind('input porpertychange', function() {
+    //   var thisTxt = $("#money").val();
+    //   thisTxt = parseFloat(rMoney(thisTxt.toString()))
+    //   $('#moneyText').val(toThousandsFormates2(thisTxt * {{ data.SO_SOMain.iExchRate || 0 }}))
+    //   $("#money").val(toThousandsFormates2(thisTxt))
+    // })
+
+    $(".span-input").bind('input porpertychange', function(event) {
+      var id = parseInt(event.target.dataset.id)
+      var thisTxt = parseInt($(".span-input-" + id).val());
+      $('#span-input-' + id).val(toThousandsFormates2({{ data.Sui._shuijiaheji || 0 }} * (thisTxt / 100)))
+    })
+
+    function submiInputProvide () {
+      if ($('.input-provide').val()) {
+        $('.ui.provide.dropdown').css('display', 'none')
+        $('.provide.cus-input').css('display', 'flex')
+        $('.provide.cus-input .text').text($('.input-provide').val())
+        $('.ui.modal.provide').modal('hide')
+      } else {
+        alert('请输入有效内容。')
+      }
+    }
+
+    function clearProvideInput () {
+      $('.ui.provide.dropdown').css('display', 'inline-block')
+      $('.provide.cus-input').css('display', 'none')
+      $('.provide.cus-input .text').text('')
+    }
+
+    function printOrder() {
+      var htbh = $('#htbh').val(), shr = $('#shr').val()
+      $('#htbhSpan').text(htbh), $('#shrSpan').text(shr)
+      $('#htbh').css({'display': 'none'}), $('#shr').css({ 'display': 'none' })
+      $('#htbhSpan').css({'display': '-webkit-box'}), $('#shrSpan').css({'display': '-webkit-box'})
+
+      window.print();
+      
+      setTimeout(() => {
+        $('#htbh').css({'display': 'inline-block'}), $('#shr').css({'display': 'inline-block'})
+        $('#htbhSpan').css({'display': 'none'}), $('#shrSpan').css({'display': 'none'})
+      }, 1000)
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售管理</title>
+    <link rel="stylesheet" href="https://semantic-ui.com/dist/semantic.min.css">
+    <script src="https://semantic-ui.com/javascript/library/jquery.min.js" charset="utf-8"></script>
+    <script src="https://semantic-ui.com/dist/semantic.min.js" charset="utf-8"></script>
+    <style media="screen">
+      body, input, textarea { font-size: 13px; font-family: "宋体"; }
+      .container { position: relative; width: 900px; margin: 0 auto; padding: 10px; }
+      .navbar { background-color: grey; padding: 0 10px; margin-bottom: 8px; }
+      .navbar a { text-decoration: none; color: #FFF; padding: 10px; display: inline-block; }
+      .ui.dropdown .dropdown.icon { margin-left: 3px; }
+      .ui.dropdown .menu>.item { width: 100%;}
+      .sign .ui.label { margin-right: 0 !important; }
+
+      .ui.selection.dropdown, .ui.fluid.dropdown>.dropdown.icon { min-height: auto; padding: 0; transition: none; border: none; }
+      .ui.search.selection.dropdown>input.search { padding: 0 3px; }
+      .ui.multiple.dropdown { padding: 0; text-align: center;}
+
+      /* 表单 */
+      .header .form { display: flex; align-items: center; justify-content: space-between; }
+      form.form input { width: 100%; text-align: center; border: none; }
+
+      /* 表格样式 */
+      .order-sale { display: flex; align-items: center; flex-direction: row; }
+      .table { text-align: center; }
+      .table .td, .table th { padding: 4px 6px; min-height: 100px; }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <div class="navbar items">
+      <a class="item" href="/order">销售管理</a>
+      <a class="item" href="/order/history">销售保存</a>
+      <a class="item" href="/lists">订单明细</a>
+    </div>
+    <div class="header">
+      <div class="form">
+        <h2 style="flex: 1; margin: 0">销售保存记录</h2>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <table class="table" border="1" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <th class="th" width="50px">项</th>
+          <th class="th" width="150px">创建时间</th>
+          <th class="th" width="150px">更新时间</th>
+          <th class="th">销售订单号 & 工程名称</th>
+          <th class="th">操作</th>
+        </tr>
+        @each(row in data.collection)
+          <tr>
+            <td class="td">{{ $loop.index + 1 }}</td>
+            <td class="td">{{ row.meta.created }}</td>
+            <td class="td" title="{{ row.meta.revision }}">{{ row.meta.updated || '' }}</td>
+            <td class="td">{{ row.cSOCode }} {{ row.cDefine2 || '' }}</td>
+            <td class="td">
+              <a href="{{ route('OrderController.index') }}?type=history&id={{ row['$loki'] }}&cSOCode={{ row.cSOCode }}">查看</a>
+              &nbsp;&nbsp;
+              <a href="{{ route('OrderController.history') }}?type=delete&id={{ row['$loki'] }}">删除</a>
+            </td>
+          </tr>
+        @endeach
+      </tbody>
+    </table>
+  </div>
+  <script>
+    @if(flashMessage('alert'))
+      alert("{{ flashMessage('alert') }}")
+    @endif
+  </script>
+</body>
+</html>

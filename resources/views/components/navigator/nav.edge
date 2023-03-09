@@ -1,0 +1,24 @@
+<div class="ui large borderless menu">
+  <div class="ui container flex-between">
+    <div class="left item menu">
+      <i class="material-icons">menu</i>
+    </div>
+    <a class="logo item" href="/">
+      <img src="/logo.png" />
+      <h1 class="ui header">智慧商城</h1>
+    </a>
+    <div class="right item menu">
+      <a href="#" id="nickname" class="activating click" data-position="bottom center"
+        data-html='
+        <div style="margin: 0 1rem;">
+          <a href="{{ route('Manager/Admin/ExamineController.index') }}">审核</a> <br /><br />
+          <a href="{{ route('Manager/Admin/PasswordController.index') }}">改密</a> <br /><br />
+          <a href="{{ route('Manager/Admin/EncryptionController.index') }}">加密</a> <br /><br />
+          <a href="{{ route('Manager/Admin/LoggerController.index') }}">日志</a> <br /><br />
+          <a href="{{ route('Manager/Admin/SettingController.index') }}">设置</a>
+        </div>
+      '>
+      </a>
+    </div>
+  </div>
+</div>

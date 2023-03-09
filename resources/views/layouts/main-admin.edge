@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="/logo.png" type="image/x-icon">
+  @!section('title')
+  {{-- <link rel="stylesheet" href="https://fonts.loli.net/icon?family=Material+Icons"> --}}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons">
+  {{ style('semantic/semantic.min') }}
+  {{ style('styles/global') }}
+  <style media="screen">
+    @media only screen and (min-width: 600px) {
+      .ui.container {width: auto; margin-left: 50px !important; margin-right: 50px !important;}
+    }
+
+    @media only screen and (max-width: 991px) {
+      .ui.stackable.four.column.grid .three.wide.column, .ui.vertical.pointing.menu .item:after, .ui.sidebar b { display: none; }
+      .ui.stackable.four.column.grid .thirteen.wide.column { width: 100% !important; }
+      .ui.vertical.menu { position: relative; box-shadow: none; border: 0; width: 100%; }
+      .ui.vertical.menu:after { position: absolute;
+        content: '';
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: rgba(34,36,38,.1);
+        visibility: visible;
+      }
+  </style>
+  @!section('style')
+</head>
+<body>
+  <div class="ui sidebar menu">
+    <!-- ui sidebar menu -->
+    <div class="item close">
+      <i class="material-icons">close</i>
+    </div>
+    @!component('components.navbar-admin-menu', data=data, csrf=csrfField())
+  </div>
+  <div class="pusher">
+    @!section('content')
+    <footer class="ui center aligned container" style="min-height: auto; margin: 30px 0;">
+      <p>Copyright © 2023 QA System. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+  <script src="/semantic/semantic.min.js" charset="utf-8"></script>
+  <script src="/script/global.js" charset="utf-8"></script>
+  <script type="text/javascript">
+    $('.ui.sidebar')
+      .sidebar('setting', 'dimPage', true)
+      .sidebar('attach events', '.item.close')
+      .sidebar('attach events', '.item.menu')
+      .sidebar({ transition: 'scale down' })
+
+    // $('.navbar .q-navbar').clone().appendTo('.ui.sidebar.menu')
+    $('.ui.dropdown').dropdown()
+  </script>
+  @!section('script')
+</body>
+</html>

@@ -1,0 +1,34 @@
+@layout('layouts.main')
+
+@section('title')
+  @!component('components.mobile-title', {
+    title: data.title
+  })
+@endsection
+
+@section('style')
+
+@endsection
+
+@section('content')
+  <div class="ui container">
+    <div class="ui centered grid">
+      <div class="sixteen wide mobile six wide computer column">
+        @if(flashMessage('message'))
+          @!component('components.alert', {
+            type: [flashMessage('type')],
+            header: [flashMessage('header')],
+            message: [flashMessage('message')]
+          })
+        @endif
+        <form class="ui form" action="{{ route('') }}" method="POST" enctype="multipart/form-data">
+
+        </form>
+      </div>
+    </div>
+  </div>
+@endsection
+
+@section('script')
+
+@endsection

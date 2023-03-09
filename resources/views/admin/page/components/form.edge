@@ -1,0 +1,55 @@
+<form class="ui form segment" action="{{ route('admin/PageController.store') }}" method="POST" enctype="multipart/form-data">
+  <div class="field">
+    <label>页面标题</label>
+    <div class="ui input">
+      <input type="text" name="page_title" value="{{ data.pages.page_title || '' }}">
+    </div>
+  </div>
+  <div class="two fields">
+    <div class="field">
+      <label>状态</label>
+      <div class="ui selection dropdown">
+        <input type="hidden" name="page_status" value="{{ data.pages.page_status }}">
+        <div class="default text">选择</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div class="item" data-value="0">待发布</div>
+          <div class="item" data-value="1">已发布</div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="article_catalog">分类目录</label>
+      <div class="ui selection dropdown">
+        <input id="page_catalog_id" name="page_catalog_id" type="hidden" value="{{ data.pages.page_catalog_id || '' }}" />
+        <i class="dropdown icon"></i>
+        <div class="default text">选择</div>
+        <div class="menu">
+          @each(row in data.page_catalog.value.value)
+            <div class="item" data-value="{{ data.page_catalog.value.id[$loop.index] }}">{{ row }}</div>
+          @endeach
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="six fields">
+    <div class="field">
+      <label>主题图</label>
+      <img class="ui small rounded bordered image" onclick="page_main_img.click()" id="page_main_img_tmp" src="{{ data.pages.page_main_img.id ? assetsUrl(data.pages.page_main_img.filePath + data.pages.page_main_img.clientName) : assetsUrl('assets/images/white-image.png') }}">
+      <input type="file" name="page_main_img[]" value="" id="page_main_img" onchange="change('#page_main_img', '#page_main_img_tmp');" hidden />
+    </div>
+  </div>
+  <div class="field">
+    <label>页面详细内容</label>
+    <div class="ui segment" style="padding: 0;">
+      <div id="editor—wrapper">
+        <div id="toolbar-container"><!-- 工具栏 --></div>
+        <div id="editor-container"><!-- 编辑器 --></div>
+      </div>
+      <input id="detail" type="text" name="detail" value="{{ data.pages.page_detail || '' }}" hidden />
+    </div>
+  </div>
+  {{ csrf }}
+  <input type="text" name="id" value="{{ data.pages.id }}" hidden />
+  <button type="submit" name="submit" value="{{ submit }}" class="ui fluid button">提交</button>
+</form>

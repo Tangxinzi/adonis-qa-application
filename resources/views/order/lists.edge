@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>订单明细</title>
+  <link rel="stylesheet" href="https://semantic-ui.com/dist/semantic.min.css">
+  <script src="https://semantic-ui.com/javascript/library/jquery.min.js" charset="utf-8"></script>
+  <script src="https://semantic-ui.com/dist/semantic.min.js" charset="utf-8"></script>
+  <style media="screen">
+    body {
+      font-size: 13px;
+      font-family: "宋体";
+    }
+
+    .container {
+      width: 900px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .navbar {
+      background-color: grey;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #FFF;
+      padding: 10px;
+      display: inline-block;
+    }
+
+    /* 表单 */
+    .header .form {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header button,
+    .header .button {
+      cursor: pointer;
+      display: inline-block;
+      min-height: 1em;
+      outline: 0;
+      border: none;
+      vertical-align: baseline;
+      background: #e0e1e2 none;
+      color: rgba(0, 0, 0, .6);
+      font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      margin: 0 .25em 0 0;
+      padding: .78571429em 1.5em .78571429em;
+      text-transform: none;
+      text-shadow: none;
+      font-weight: 700;
+      line-height: 1em;
+      font-style: normal;
+      text-align: center;
+      text-decoration: none;
+      border-radius: .28571429rem;
+    }
+
+    /* 表格样式 */
+    .order-sale {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+    }
+
+    .table {
+      text-align: center;
+      font-family: "宋体";
+      width: 100%;
+      table-layout: fixed;
+      word-break: break-all;
+    }
+
+    .table { text-align: center; font-family: "宋体"; border: solid rgb(45, 45, 45); border-left-width: 0pt; border-top-width: 0pt; border-right-width: 0.4pt; border-bottom-width: 0.4pt; }
+    th, td { border: solid rgb(45, 45, 45); border-left-width: 0.4pt; border-top-width: 0.4pt; border-right-width: 0; border-bottom-width: 0; }
+
+    .table .td,
+    .table th {
+      padding: 4px 6px;
+      min-height: 100px;
+    }
+  </style>
+  <style media="print">
+    @media print {
+      .Noprint {
+        display: none;
+      }
+
+      .PageNext {
+        page-break-after: always;
+      }
+
+      .table { text-align: center; font-family: "宋体"; border: solid rgb(45, 45, 45); border-left-width: 0pt; border-top-width: 0pt; border-right-width: 0.4pt; border-bottom-width: 0.4pt; }
+      th, td { border: solid rgb(45, 45, 45); border-left-width: 0.4pt; border-top-width: 0.4pt; border-right-width: 0; border-bottom-width: 0; }
+
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
+
+      body {
+        font-size: 10px;
+        font-family: "宋体";
+      }
+
+      .none {
+        display: none !important;
+      }
+
+      .ui.dropdown .dropdown.icon {
+        display: none;
+      }
+
+      .ui.search.dropdown>.text {
+        text-align: center !important;
+        width: 100%;
+      }
+
+      .navbar,
+      .header {
+        display: none;
+      }
+
+      .td input {
+        width: 80px;
+        text-align: center;
+        border: none;
+      }
+
+      .ui.dropdown {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .form .td {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .form .ui.label {
+        font-size: 0;
+        margin: 0;
+        padding: 0;
+        display: inline !important;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ui.selection.dropdown,
+      .ui.fluid.dropdown>.dropdown.icon {
+        min-height: auto;
+        padding: 0;
+        transition: none;
+        border: none;
+      }
+
+      .ui.search.selection.dropdown>input.search {
+        padding: 0 3px;
+      }
+
+      .ui.default.dropdown:not(.button)>.text,
+      .ui.dropdown:not(.button)>.default.text {
+        color: #FFF !important;
+      }
+
+      .ui.multiple.dropdown>.label {
+        box-shadow: none;
+        font-size: 0 !important;
+      }
+
+      .ui.multiple.dropdown>.label img {
+        width: 26px;
+        height: 26px;
+        display: block;
+        margin: 0 auto;
+        font-size: 20px;
+      }
+
+      .default.text {
+        color: #FFF;
+      }
+
+      .order-sale {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+      }
+
+      .table {
+        text-align: center;
+        font-family: "宋体";
+        width: 100%;
+        table-layout: fixed;
+        word-break: break-all;
+      }
+
+      td {
+        border: solid rgb(45, 45, 45);
+        border-left-width: 0.4pt;
+        border-top-width: 0.4pt;
+        border-right-width: 0;
+        border-bottom-width: 0;
+      }
+
+      .order-sale {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+      }
+
+      .table {
+        text-align: center;
+        font-family: "宋体";
+        border: solid rgb(45, 45, 45);
+        border-left-width: 0pt;
+        border-top-width: 0pt;
+        border-right-width: 0.4pt;
+        border-bottom-width: 0.4pt;
+      }
+
+      .table .td {
+        padding: 3px 5px;
+      }
+
+      .com span {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+      }
+
+      .sign .td {
+        height: 70px;
+        padding: 0;
+        width: 90px;
+      }
+
+      .sign .td .ui.multiple.dropdown {
+        display: flex !important;
+        margin: 0 !important;
+      }
+
+      .sign .td .ui.multiple.dropdown img {
+        position: relative;
+        left: 14px;
+      }
+
+      .sign .td .default.text {
+        display: none !important;
+      }
+
+      .order-info {
+        display: flex;
+      }
+
+      .order-info .left-table {
+        width: 58%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+      }
+
+      .order-info .right-table {
+        width: 39%;
+        margin-left: 3%;
+      }
+
+      .four,
+      .three,
+      .two {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
+
+      .four .item {
+        width: 24%;
+        position: relative;
+        ;
+      }
+
+      .four span {
+        text-align: center;
+        width: 58px;
+        display: inline-block;
+        float: right;
+      }
+
+      .three .item {
+        width: 30%;
+      }
+
+      .three.ext .item {
+        display: flex;
+      }
+
+      .three.ext .item span {
+        margin-right: 5px;
+        line-height: 13px;
+        position: relative;
+        top: 0px;
+      }
+
+      .description p {
+        margin: 5px;
+      }
+
+      .description .border {
+        border: 0.4pt solid #000;
+        height: 130px;
+        line-height: 130px;
+        padding: 0;
+      }
+
+      .description span {
+        margin-right: 5px;
+      }
+
+      .description textarea {
+        background-color: transparent;
+      }
+
+      i.icon {
+        display: none;
+      }
+
+      .unit.td {
+        width: 50px;
+        text-align: center;
+      }
+
+      .other.td {
+        width: 90px;
+      }
+
+      .title.td {
+        width: 90px !important;
+      }
+
+      .table .td .priceValue {
+        text-align: right !important;
+        display: block;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="navbar items">
+      <a class="item" href="/order">销售管理</a>
+      <a class="item" href="/order/history">销售保存</a>
+      <a class="item" href="/lists">订单明细</a>
+    </div>
+    <div class="header">
+      <div class="form">
+        <h2 style="flex: 1; margin: 0">订单明细</h2>
+        <div class="ui selection dropdown price"
+          style="border: 1px solid rgba(34,36,38,.15); padding: .78571429em 2.1em .78571429em 1em; margin-right: 10px;">
+          <input type="hidden" name="isPrice">
+          <i class="dropdown icon"></i>
+          <div class="default text">是否显示金额</div>
+          <div class="menu">
+            <div class="item" data-value="1">是</div>
+            <div class="item" data-value="0">否</div>
+          </div>
+        </div>
+        <form class="" action="#" method="GET">
+          <div class="ui action input" style="margin-right: 10px; ">
+            <input type="text" style="width: 200px;" name="cSOCode" placeholder="搜索销售订单号（制造编号）"
+              value="{{ data.cSOCode || '' }}" />
+            <button class="ui button" type="submit" name="button">提交</button>
+          </div>
+          {{ csrfField() }}
+        </form>
+        <div class="input">
+          <a class="button" href="/download" target="_blank">导出 Excel</a>
+          <a class="ui button" onclick="printOrder()">打印预览</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    @each(item in data.New_SO_SODetails)
+      <table class="table" cellpadding="0" cellspacing="0" width="100%" style="page-break-after: always; margin-top: {{ $loop.index ? '0' : '0' }}">
+        <tbody>
+          <tr>
+            <th class="th" width="50px">项</th>
+            <th class="th" width="120px">部品编码</th>
+            <th class="th" width="160px">部品名称</th>
+            <th class="th" width="60px">数量</th>
+            <th class="th" width="60px">单位</th>
+            <th class="th" width="100px">金额</th>
+            <th class="th" width="100px">辅助金额</th>
+            <th class="th" width="300px">备注</th>
+          </tr>
+          @each(detail in item)
+            @if(detail.iRowNo)
+              <tr>
+                <td class="td">{{ detail.index }}</td>
+                <td class="td">{{ detail.cInvCode || '' }}</td>
+                <td class="td" align="left">{{ detail.cInvName || '' }}</td>
+                <td class="td">{{ detail.iQuantity || '' }}</td>
+                <td class="td">{{ detail.CCOMUNITNAME || '' }}</td>
+                <td class="td" align="right">
+                  <span class="priceValue">{{ detail.iSum || '' }}</span>
+                </td>
+                <td class="td" align="right">
+                  <span class="priceValue">{{ detail.cDefine27 || '0.00' }}</span>
+                </td>
+                <td class="td" align="left">
+                  <span style="width: 100%">{{ detail.cMemo || '' }} {{ detail.cDefine29 || '' }} {{ detail.cDefine28 || '' }}</span>
+                </td>
+              </tr>
+            @endif
+          @endeach
+          {{--  统计  --}}
+          @if($loop.index + 1 == data.New_SO_SODetails.length)
+          <tr>
+            <td class="td">{{ data.SO_SODetails.length + 1 }}</td>
+            <td class="td">合计：</td>
+            <td class="td" align="left"></td>
+            <td class="td">{{ data.count[0] }}</td>
+            <td class="td"></td>
+            <td class="td" align="right">
+              <span class="priceValue">{{ data.count[1] }}</span>
+            </td>
+            <td class="td" align="right">
+              <span class="priceValue">{{ data.count[2] }}</span>
+            </td>
+            <td class="td" align="left"></td>
+          </tr>
+        </tbody>
+        @endif
+      </table>  
+    @endeach
+    
+    <table class="table" cellpadding="0" cellspacing="0" width="100%" style="display: none">
+      <tbody>
+        <tr>
+          <th class="th" width="50px">项</th>
+          <th class="th" width="120px">部品编码</th>
+          <th class="th" width="160px">部品名称</th>
+          <th class="th" width="60px">数量</th>
+          <th class="th" width="60px">单位</th>
+          <th class="th" width="100px">金额</th>
+          <th class="th" width="300px">备注</th>
+        </tr>
+        @each(detail in data.SO_SODetails)
+        <tr>
+          <td class="td">{{ detail.iRowNo }}</td>
+          <td class="td">{{ detail.cInvCode || '' }}</td>
+          <td class="td" align="left">{{ detail.cInvName || '' }}</td>
+          <td class="td">{{ detail.iQuantity || '' }}</td>
+          <td class="td">{{ detail.CCOMUNITNAME || '' }}</td>
+          <td class="td" align="right">
+            <span class="priceValue">{{ detail.iSum ? detail.iSum : '' }}</span>
+          </td>
+          <td class="td" align="left">
+            <span style="width: 100%">{{ detail.cMemo || '' }} {{ detail.cDefine29 || '' }} {{ detail.cDefine28 || ''
+              }}</span>
+          </td>
+        </tr>
+        @endeach
+        {{--  统计  --}}
+        @if(data.SO_SODetails.length)
+        <tr>
+          <td class="td">{{ data.SO_SODetails.length + 1 }}</td>
+          <td class="td">合计：</td>
+          <td class="td" align="left"></td>
+          <td class="td">{{ data.count[0] }}</td>
+          <td class="td"></td>
+          <td class="td" align="right">
+            <span class="priceValue">{{ data.count[1] }}</span>
+          </td>
+          <td class="td" align="left"></td>
+        </tr>
+        @endif
+      </tbody>
+    </table>
+  </div>
+  <div class="ui mini modal">
+    <div class="header">提示</div>
+    <div class="content">
+      <p>您搜索的销售订单号 {{ data.cSOCode }} 无数据。</p>
+    </div>
+    <div class="actions">
+      <div class="ui positive right labeled icon button">
+        确定
+        <i class="checkmark icon"></i>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    @if(!data.SO_SODetails.length)
+      $('.mini.modal').modal('show')
+    @endif
+
+    $(".ui.selection.dropdown.price").dropdown({
+      onChange: function(value, text, $choice) {
+        if (text == '否') {
+          $('.priceValue').css({ 'display': 'none' })
+        } else {
+          $('.priceValue').css({ 'display': 'inline' })
+        }
+      },
+    });
+    
+    function printOrder() {
+      window.print();
+    }
+  </script>
+</body>
+
+</html>

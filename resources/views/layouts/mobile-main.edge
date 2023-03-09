@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="{{ assetsUrl('logo.png') }}" />
+  @!section('title')
+  {{ style('semantic-ui/semantic.min') }}
+  {{ style('global') }}
+  <style media="screen">
+    body {
+      background-color: #FFF;
+    }
+  </style>
+  @!section('style')
+</head>
+<body>
+  @!section('content')
+  @!component('components.footer')
+  {{ script('https://res.wx.qq.com/open/js/jweixin-1.3.2.js') }}
+  {{ script('https://unpkg.com/jquery@3.3.1/dist/jquery.min.js') }}
+  {{ script('semantic-ui/semantic.min') }}
+
+  <script type="text/javascript">
+    $('.ui.dropdown').dropdown()
+    // $('.ui.checkbox').checkbox()
+    $('.tabular.menu .item').tab()
+    $('.activating.click').popup({
+      on: 'click'
+    })
+    $('.activating.hover').popup({
+      on: 'hover'
+    })
+    $('.ui.message').on('click', function() {
+      $(this).closest('.message').fadeOut()
+    })
+    $('.ui.accordion').accordion({
+      selector: {
+        trigger: '.title'
+      }
+    })
+    $('.ui.rating').rating()
+
+    // 注册事件 接收数据
+    window.document.addEventListener('message', function (e) {
+      const message = e.data;
+      window.postMessage(message);
+    })
+
+    // 注册事件 发送数据
+    $('.native.pages').click((e) => {
+      try {
+        wx.miniProgram.getEnv((res) => {
+          if (res.miniprogram) {
+            const dataset = $(e)[0].currentTarget.dataset
+            switch (dataset.navigation) {
+              case 'Web':
+                wx.miniProgram.navigateTo({
+                  url: '/pages/web/web?title=' + dataset.title + '&src=' + dataset.data
+                })
+                break;
+              case 'ProductDetails':
+                wx.miniProgram.navigateTo({
+                  url: '/pages/product/product?id=' + dataset.id + '&title=' + dataset.title
+                })
+                break;
+            }
+          }
+        })
+
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+          dataset: $(e)[0].currentTarget.dataset
+        }))
+      } catch (e) {}
+    })
+  </script>
+  @!section('script')
+</body>
+</html>
