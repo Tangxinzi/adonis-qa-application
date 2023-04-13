@@ -34,6 +34,15 @@ Route.group(() => {
   Route.get('/question', 'Admin/QuestionController.index')
   Route.get('/question/show/:id', 'Admin/QuestionController.edit')
 
+  Route.get('/course', 'Admin/CourseController.index')
+  Route.post('/course/store', 'Admin/CourseController.store')
+
+  Route.get('/discover', 'Admin/DiscoverController.index')
+  Route.get('/message', 'Admin/MessageController.index')
+  Route.get('/user/userinfo', 'Admin/UserController.userinfo')
+
   Route.post('/user/login', 'Admin/UserController.login')
   Route.post('/user/register', 'Admin/UserController.register')
+  Route.post('/user/like', 'Admin/LikeController.store')
+  Route.post('/user/comment', 'Admin/CommentController.store')
 }).prefix('/api')

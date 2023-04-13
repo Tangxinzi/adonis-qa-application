@@ -1,8 +1,6 @@
 'use strict'
-// const Mongoose = require('../../../../config/mongoose')
 const Randomstring = require("randomstring")
 const MongoClient = require('mongodb').MongoClient;
-// const ObjectID = require('mongodb').ObjectID;
 const url = 'mongodb://127.0.0.1:27017/'
 const db = MongoClient.connect('mongodb://127.0.0.1:27017/qa-system')
 
@@ -107,7 +105,7 @@ class QuestionController {
       }
 
       if (all.submit == 'create') {
-        data.question_id = Randomstring.generate()
+        data.question_id = RandomString.generate()
         MongoClient.connect(url).then(db => {
           db.db("qa-system").collection("questions").insertOne(data)
         }).catch(error => console.log('😿 连接数据库失败', error))
@@ -165,7 +163,7 @@ class QuestionController {
   }) {
     try {
       const all = request.all()
-      const questions = await new Promise(async (resolve, reject) => {
+      var questions = await new Promise(async (resolve, reject) => {
         await MongoClient.connect('mongodb://127.0.0.1:27017').then((db) => {
           const collection = db.db("qa-system").collection("questions").findOne({}, {
             projection: { question_id: params.id, question_title: 1, question_status: 1, question_level: 1, question_catalog_id: 1, question_tips: 1, question_detail: 1 }
@@ -174,7 +172,18 @@ class QuestionController {
         }).catch(error => console.log('😿 连接数据库失败', error))
       })
 
-      if (all.type == 'json') return questions
+      if (all.type == 'json') {
+        questions['like'] = await new Promise(async (resolve, reject) => {
+          await MongoClient.connect('mongodb://127.0.0.1:27017').then((db) => {
+            const collection = db.db("qa-system").collection("likes").findOne({ 'relation_type': 'question', 'relation_user_id': 'TlzPsHCm6g5R8h6UCT5fxQHFoEqDa3sC' }, {
+              // projection: { question_id: params.id, question_title: 1, question_status: 1, question_level: 1, question_catalog_id: 1, question_tips: 1, question_detail: 1 }
+            })
+            resolve(collection)
+          }).catch(error => console.log('😿 连接数据库失败', error))
+        })
+
+        return questions
+      }
 
       return view.render('admin.question.edit', {
         data: {

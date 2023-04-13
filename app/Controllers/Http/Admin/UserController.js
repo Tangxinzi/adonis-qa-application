@@ -13,6 +13,26 @@ const db = MongoClient.connect('mongodb://127.0.0.1:27017/qa-system')
  * Resourceful controller for interacting with users
  */
 class UserController {
+  async userinfo ({ request, response, view }) {
+    var users = await new Promise(async (resolve, reject) => {
+      await MongoClient.connect('mongodb://127.0.0.1:27017').then((db) => {
+        const collection = db.db("qa-system").collection("users").find({}).toArray()
+        resolve(collection)
+      }).catch(error => console.log('😿 连接数据库失败'))
+    })
+
+    users = {
+      avatar: 'https://semantic-ui.com/images/avatar2/small/lindsay.png',
+      username: 'Lindsay',
+      school: 'USA School',
+      year: '2000',
+      major: 'CS',
+      area: 'USA'
+    }
+
+    return users
+  }
+
   /**
    * Show a list of all users.
    * GET users
