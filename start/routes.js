@@ -46,3 +46,17 @@ Route.group(() => {
   Route.post('/user/like', 'Admin/LikeController.store')
   Route.post('/user/comment', 'Admin/CommentController.store')
 }).prefix('/api')
+
+Route.group(() => {
+  Route.get('/discover', 'Api/DiscoverController.index')
+
+  Route.post('/file/upload', 'Api/FileController.upload')
+
+  Route.post('/user/login', 'Api/UserController.login')
+  Route.post('/user/register', 'Api/UserController.register')
+  Route.get('/user/info/:id', 'Api/UserController.info')
+  Route.post('/user/info/:id', 'Api/UserController.info')
+
+  Route.get('/question', 'Api/QuestionController.index')
+  Route.post('/question/create', 'Api/QuestionController.create')
+}).prefix('/api/v2')

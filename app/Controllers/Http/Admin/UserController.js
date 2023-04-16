@@ -2,8 +2,9 @@
 const MD5 = use('md5')
 const Randomstring = require("randomstring")
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://127.0.0.1:27017/'
-const db = MongoClient.connect('mongodb://127.0.0.1:27017/qa-system')
+const Mongo = MongoClient.connect('mongodb://127.0.0.1:27017')
+const Database = use('Database')
+// const User = use('app/Models/User')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -15,7 +16,7 @@ const db = MongoClient.connect('mongodb://127.0.0.1:27017/qa-system')
 class UserController {
   async userinfo ({ request, response, view }) {
     var users = await new Promise(async (resolve, reject) => {
-      await MongoClient.connect('mongodb://127.0.0.1:27017').then((db) => {
+      await Mongo.then((db) => {
         const collection = db.db("qa-system").collection("users").find({}).toArray()
         resolve(collection)
       }).catch(error => console.log('😿 连接数据库失败'))
@@ -44,7 +45,7 @@ class UserController {
    */
   async index ({ request, response, view }) {
     const users = await new Promise(async (resolve, reject) => {
-      await MongoClient.connect('mongodb://127.0.0.1:27017').then((db) => {
+      await Mongo.then((db) => {
         const collection = db.db("qa-system").collection("users").find({}).toArray()
         resolve(collection)
       }).catch(error => console.log('😿 连接数据库失败'))
@@ -70,7 +71,7 @@ class UserController {
         created_at: new Date()
       }
 
-      MongoClient.connect(url).then(db => {
+      Mongo.then(db => {
         db.db("qa-system").collection("users").insertOne(data)
       }).catch(error => console.log('😿 连接数据库失败', error))
 
@@ -85,14 +86,30 @@ class UserController {
   async login ({ request, response }) {
     try {
       const all = request.all()
-      return await new Promise(async (resolve, reject) => {
-        await MongoClient.connect('mongodb://127.0.0.1:27017').then((db) => {
-          const collection = db.db("qa-system").collection("users").findOne({}, {
-            projection: { user_email: all.user_email, user_password: MD5(all.user_password), user_id: 1, user_name: 1 }
-          })
-          resolve(collection)
-        }).catch(error => console.log('😿 连接数据库失败', error))
-      })
+      // const db = await Database.connect('mongodb')
+      // const _mongoClient = await Database.connect()
+      // return await _mongoClient.collection('users')
+      // return await Database.collection('users').where({ user_email: all.user_email, user_password: MD5(all.user_password) })
+      // return await Database.collection('users').find({ user_email: all.user_email + '12', user_password: MD5(all.user_password) })
+      // return await Database.collection('users').where({ "user_id" : "2O8eh252eJjK6OxLMcxB8otT04UCr43w" })
+
+      // const users = await User.where({ isActive: false }).fetch()
+
+      // console.log(users.toJSON())
+
+      const Database = use('Database')
+      const users = await Database.collection('users').find()
+      console.log(users)
+      return users
+
+      // return await new Promise(async (resolve, reject) => {
+      //   await Mongo.then((db) => {
+      //     const collection = db.db("qa-system").collection("users").findOne({}, {
+      //       projection: { user_email: all.user_email, user_password: MD5(all.user_password), user_id: 1, user_name: 1 }
+      //     })
+      //     resolve(collection)
+      //   }).catch(error => console.log('😿 连接数据库失败', error))
+      // })
     } catch (e) {
       console.log(e)
     } finally {
@@ -118,7 +135,7 @@ class UserController {
         user_password: all.user_password || '',
       }
 
-      MongoClient.connect(url).then(db => {
+      Mongo.then(db => {
         db.db("qa-system").collection("users").updateOne({ user_id: all.user_id }, { $set: data }, { upsert: true })
       }).catch(error => console.log('😿 连接数据库失败', error))
 

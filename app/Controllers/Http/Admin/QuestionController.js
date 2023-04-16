@@ -2,7 +2,7 @@
 const Randomstring = require("randomstring")
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017/'
-const db = MongoClient.connect('mongodb://127.0.0.1:27017/qa-system')
+const Mongo = MongoClient.connect('mongodb://127.0.0.1:27017')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -29,7 +29,7 @@ class QuestionController {
     try {
       const all = request.all()
       const questions = await new Promise(async (resolve, reject) => {
-        await MongoClient.connect('mongodb://127.0.0.1:27017').then((db) => {
+        await Mongo.then((db) => {
           const collection = db.db("qa-system").collection("questions").find({}).toArray()
           resolve(collection)
         }).catch(error => console.log('😿 连接数据库失败'))

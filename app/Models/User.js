@@ -1,39 +1,33 @@
-'use strict'
+const db = require('../../config/mongoose')
 
-/** @type {import('@adonisjs/framework/src/Hash')} */
-const Hash = use('Hash')
+const options = {
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
-
-class User extends Model {
-  static boot () {
-    super.boot()
-
-    /**
-     * A hook to hash the user password before saving
-     * it to the database.
-     */
-    this.addHook('beforeSave', async (userInstance) => {
-      if (userInstance.dirty.password) {
-        userInstance.password = await Hash.make(userInstance.password)
-      }
-    })
-  }
-
-  /**
-   * A relationship on tokens is required for auth to
-   * work. Since features like `refreshTokens` or
-   * `rememberToken` will be saved inside the
-   * tokens table.
-   *
-   * @method tokens
-   *
-   * @return {Object}
-   */
-  tokens () {
-    return this.hasMany('App/Models/Token')
-  }
 }
+
+const schema = new db.Schema({
+  user_id: {
+    type: String
+  },
+  user_name: {
+    type: String
+  },
+  user_email: {
+    type: String
+  },
+  user_password: {
+    type: String
+  },
+  user_identity: {
+    type: String
+  },
+  other: {
+    type: Object
+  },
+  created_at: {
+    type: Date
+  },
+}, options)
+
+const User = db.model('User', schema)
 
 module.exports = User
