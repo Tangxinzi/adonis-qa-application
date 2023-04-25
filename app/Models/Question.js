@@ -9,7 +9,8 @@ const schema = new db.Schema({
     type: String
   },
   user_id: {
-    type: String
+    type: String,
+    required: true
   },
   question_name: {
     type: String
@@ -26,6 +27,9 @@ const schema = new db.Schema({
   question_tips: {
     type: String
   },
+  question_solve: {
+    type: Boolean
+  },
   question_status: {
     type: String
   },
@@ -36,6 +40,12 @@ const schema = new db.Schema({
     type: String
   },
   question_label_id: {
+    type: String
+  },
+  question_view: {
+    type: Number
+  },
+  file: {
     type: String
   },
   created_at: {

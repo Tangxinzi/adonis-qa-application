@@ -5,35 +5,27 @@ const options = {
 }
 
 const schema = new db.Schema({
+  room_id: {
+    type: String,
+    required: true
+  },
   user_id: {
-    type: String
-  },
-  user_name: {
     type: String,
     required: true
   },
-  user_email: {
+  chat_type: {
     type: String,
     required: true
   },
-  avatar: {
-    type: String
-  },
-  user_password: {
+  chat_content: {
     type: String,
     required: true
-  },
-  user_identity: {
-    type: String
-  },
-  other: {
-    type: Object
   },
   created_at: {
     type: Date
   },
 }, options)
 
-const User = db.model('User', schema)
+const Chat = db.model('chats', schema)
 
-module.exports = User
+module.exports = Chat

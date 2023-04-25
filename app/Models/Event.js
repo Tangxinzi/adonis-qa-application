@@ -6,34 +6,34 @@ const options = {
 
 const schema = new db.Schema({
   user_id: {
-    type: String
-  },
-  user_name: {
     type: String,
     required: true
   },
-  user_email: {
+  event_title: {
     type: String,
     required: true
   },
-  avatar: {
-    type: String
-  },
-  user_password: {
+  event_content: {
     type: String,
     required: true
   },
-  user_identity: {
-    type: String
+  event_start_time: {
+    type: String,
+    required: true
   },
-  other: {
-    type: Object
+  event_duration: {
+    type: Number,
+    required: true
+  },
+  event_coin: {
+    type: Number,
+    required: true
   },
   created_at: {
     type: Date
   },
 }, options)
 
-const User = db.model('User', schema)
+const Event = db.model('events', schema)
 
-module.exports = User
+module.exports = Event

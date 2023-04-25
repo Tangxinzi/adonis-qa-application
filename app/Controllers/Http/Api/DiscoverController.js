@@ -2,6 +2,9 @@
 const MD5 = use('md5')
 const Randomstring = require("randomstring")
 const Question = use('App/Models/Question')
+const Like = use('App/Models/Like')
+const Star = use('App/Models/Star')
+const Comment = use('App/Models/Comment')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -26,6 +29,7 @@ class DiscoverController {
     if(all.type == 'question') {
       return await new Promise(async (resolve, reject) => {
         Question.aggregate([
+          // { "$match": { question_solve: { $eq: '' } } },
           {
             "$project": {
               "u_id": {
@@ -34,15 +38,16 @@ class DiscoverController {
                   "to": "objectId"
                 }
               },
-              question_id: 1,
               user_id: 1,
               question_title: 1,
               question_detail: 1,
               question_tips: 1,
               question_status: 1,
               question_solve: 1,
+              question_view: 1,
               question_name: 1,
               question_code: 1,
+              file: 1,
               created_at: 1
             }
           },
@@ -53,8 +58,18 @@ class DiscoverController {
               foreignField: '_id',  // 对方集合关联的字段
         			as: 'userinfo',  // 结果字段名,
         		},
-        	}
-        ]).sort({ 'created_at': -1 }).then(collection => {
+        	},
+        	{
+        		 $sort: {
+        		   'created_at': -1
+        		 }
+        	},
+        ]).then(async(collection) => {
+          for (var i = 0; i < collection.length; i++) {
+            collection[i].like = await Like.count({ question_id: collection[i]._id.toString() })
+            collection[i].star = await Star.count({ question_id: collection[i]._id.toString() })
+            collection[i].comment = await Comment.count({ question_id: collection[i]._id.toString() })
+          }
           resolve(collection)
         })
       }).catch(error => console.log(error))

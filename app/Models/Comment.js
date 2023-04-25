@@ -5,35 +5,23 @@ const options = {
 }
 
 const schema = new db.Schema({
+  question_id: {
+    type: String,
+    required: true
+  },
   user_id: {
-    type: String
-  },
-  user_name: {
     type: String,
     required: true
   },
-  user_email: {
+  comment_content: {
     type: String,
     required: true
-  },
-  avatar: {
-    type: String
-  },
-  user_password: {
-    type: String,
-    required: true
-  },
-  user_identity: {
-    type: String
-  },
-  other: {
-    type: Object
   },
   created_at: {
     type: Date
   },
 }, options)
 
-const User = db.model('User', schema)
+const Comment = db.model('comments', schema)
 
-module.exports = User
+module.exports = Comment

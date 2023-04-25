@@ -13,7 +13,7 @@ class FileController {
       if (request.file('file')) {
         var file = {}
         const profile = request.file('file', { type: ['image', 'video'], size: '100mb' })
-        const profileName = `${RandomString.generate(32)}.${profile.extname}`
+        const profileName = `${RandomString.generate(32)}.${profile.extname || 'jpg'}`
         const profilePath = `/uploads/files/tmp/`
 
         file.fileName = profile.clientName
@@ -23,7 +23,7 @@ class FileController {
           name: profileName,
           overwrite: true
         })
-
+        
         return {
           errno: 0, // 注意：值是数字，不能是字符串
           data: {
