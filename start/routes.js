@@ -48,20 +48,26 @@ Route.group(() => {
 }).prefix('/api')
 
 Route.group(() => {
+  Route.get('/search', 'Api/SearchController.index')
+
   Route.get('/discover', 'Api/DiscoverController.index')
 
   Route.post('/file/upload', 'Api/FileController.upload')
+  Route.post('/tool/ocr', 'Api/ToolController.ocr')
 
   Route.post('/user/login', 'Api/UserController.login')
   Route.post('/user/register', 'Api/UserController.register')
   Route.get('/user/info/:id', 'Api/UserController.info')
   Route.post('/user/info/:id', 'Api/UserController.info')
+  Route.get('/user/data/:id', 'Api/UserController.data')
   Route.get('/user/tutors', 'Api/UserController.tutors')
   Route.get('/user/favorites', 'Api/UserController.favorites')
   Route.get('/user/events', 'Api/UserController.events')
   Route.get('/user/sign', 'Api/UserController.sign')
   Route.post('/user/sign', 'Api/UserController.sign')
   Route.get('/user/sign/days', 'Api/UserController.days')
+  Route.get('/user/comment', 'Api/CommentController.index')
+  Route.post('/comment/create', 'Api/CommentController.create')
 
   Route.get('/question', 'Api/QuestionController.index')
   Route.get('/question/lists', 'Api/QuestionController.lists')
@@ -78,8 +84,8 @@ Route.group(() => {
   Route.get('/chat/room/:id', 'Api/RoomController.room')
   Route.get('/chat/show/:id', 'Api/RoomController.show')
   Route.post('/chat/send/:id', 'Api/RoomController.send')
+  Route.post('/chat/gpt', 'Api/RoomController.gpt')
   Route.post('/chat/create', 'Api/RoomController.create')
 
-  Route.get('/user/comment', 'Api/CommentController.index')
-  Route.post('/comment/create', 'Api/CommentController.create')
+  Route.get('/coin', 'Api/CoinController.index')
 }).prefix('/api/v2')

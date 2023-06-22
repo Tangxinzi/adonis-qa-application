@@ -59,7 +59,7 @@ class UserController {
         console.log(e)
       }
     } else {
-      return
+      return 'error'
     }
   }
 
@@ -96,8 +96,31 @@ class UserController {
         })
       }).catch(error => console.log(error))
     }
+  }
 
-    return
+  async data ({ params, request, response, view }) {
+    const count = [
+      {
+        text: 'Like',
+        number: await Like.count({ user_id: params.id })
+      },
+      {
+        text: 'Star',
+        number: await Star.count({ user_id: params.id })
+      },
+      {
+        text: 'Coin',
+        number: 0,
+      },
+      {
+        text: 'Comments',
+        number: await Comment.count({ user_id: params.id })
+      },
+    ]
+
+    return {
+      count
+    }
   }
 
   async events ({ request, response, view }) {

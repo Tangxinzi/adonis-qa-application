@@ -1,4 +1,5 @@
 'use strict'
+const Coin = use('App/Models/Coin')
 const Comment = use('App/Models/Comment')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -28,6 +29,22 @@ class CommentController {
     }).catch(error => console.log(error))
   }
 
+  async createCoin(user_id, related_id, coin_type, num) {
+    const save = new Coin({
+      user_id,
+      related_id,
+      coin_type,
+      num,
+      created_at: new Date()
+    })
+
+    return await new Promise(async (resolve, reject) => {
+      save.save().then(collection => {
+        resolve(collection)
+      })
+    }).catch(error => console.log(error))
+  }
+
   /**
    * Render a form to be used for creating a new comment.
    * GET comments/create
@@ -47,11 +64,15 @@ class CommentController {
         created_at: new Date()
       })
 
-      return await new Promise(async (resolve, reject) => {
+      var comment = await new Promise(async (resolve, reject) => {
         save.save().then(collection => {
           resolve(collection)
         })
       }).catch(error => console.log(error))
+
+      await this.createCoin(all.user_id, all.question_id, 'Comment', 100);
+
+      return comment
     } catch (e) {
       console.log(e)
     }

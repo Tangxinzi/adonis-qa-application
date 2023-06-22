@@ -215,16 +215,44 @@ class RoomController {
     }
   }
 
-  /**
-   * Render a form to update an existing room.
-   * GET rooms/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
+  async gpt ({ params, request, response, view }) {
+    const all = request.all()
+    const prompt = '你好，ChatGPT！';
+    const axios = require('axios');
+    const apiKey = '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';
+    // const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    // 设置请求头
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    };
+
+    // 设置对话的起始内容
+    const messages = [
+      { 'role': 'system', 'content': 'You are a helpful assistant.' },
+      { 'role': 'user', 'content': 'Who won the world series in 2020?' },
+      { 'role': 'assistant', 'content': 'The Los Angeles Dodgers won the World Series in 2020.' },
+      { 'role': 'user', 'content': 'Where was it played?' }
+    ];
+
+    // 设置请求体
+    const data = {
+      'messages': messages,
+      'max_tokens': 100 // 可根据需要设置回答的最大长度
+    };
+
+    // 发起API请求
+    axios.post(apiUrl, data, { headers }).then(response => {
+      const answer = response.data.choices[0].message.content;
+      console.log('Answer:', answer);
+    })
+    .catch(error => {
+      console.error('Error:', error.message);
+    });
+
   }
 
   /**

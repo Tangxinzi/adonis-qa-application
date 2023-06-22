@@ -1,21 +1,18 @@
 'use strict'
-const MD5 = use('md5')
-const Randomstring = use("randomstring")
-const User = use('App/Models/User')
-const Event = use('App/Models/Event')
-const { MongoClient, ObjectId } = use('mongodb')
+const Comment = use('App/Models/Comment')
+const Question = use('App/Models/Question')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 /**
- * Resourceful controller for interacting with events
+ * Resourceful controller for interacting with comments
  */
-class EventController {
+class SearchController {
   /**
-   * Show a list of all events.
-   * GET events
+   * Show a list of all comments.
+   * GET comments
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -25,16 +22,18 @@ class EventController {
   async index ({ request, response, view }) {
     const all = request.all()
 
+    if (!all.word) return []
+
     return await new Promise(async (resolve, reject) => {
-      Event.find().sort({ 'created_at': -1 }).then(collection => {
+      Question.find({ question_name: {$regex: all.word } }).sort({ 'created_at': -1 }).then(collection => {
         resolve(collection)
       })
     }).catch(error => console.log(error))
   }
 
   /**
-   * Render a form to be used for creating a new event.
-   * GET events/create
+   * Render a form to be used for creating a new comment.
+   * GET comments/create
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -44,14 +43,10 @@ class EventController {
   async create ({ request, response, view }) {
     try {
       const all = request.all()
-
-      const save = new Event({
-        user_id: all.user_id,
-        event_title: all.event_title,
-        event_content: all.event_content,
-        event_start_time: all.event_start_time,
-        event_duration: all.event_duration,
-        event_coin: all.event_coin,
+      const save = new Comment({
+        question_id: all.question_id,
+        user_id: all.user_id || '',
+        comment_content: all.comment_content || '',
         created_at: new Date()
       })
 
@@ -62,14 +57,12 @@ class EventController {
       }).catch(error => console.log(error))
     } catch (e) {
       console.log(e)
-    } finally {
-
     }
   }
 
   /**
-   * Create/save a new event.
-   * POST events
+   * Create/save a new comment.
+   * POST comments
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -79,8 +72,8 @@ class EventController {
   }
 
   /**
-   * Display a single event.
-   * GET events/:id
+   * Display a single comment.
+   * GET comments/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -91,8 +84,8 @@ class EventController {
   }
 
   /**
-   * Render a form to update an existing event.
-   * GET events/:id/edit
+   * Render a form to update an existing comment.
+   * GET comments/:id/edit
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -103,8 +96,8 @@ class EventController {
   }
 
   /**
-   * Update event details.
-   * PUT or PATCH events/:id
+   * Update comment details.
+   * PUT or PATCH comments/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -114,8 +107,8 @@ class EventController {
   }
 
   /**
-   * Delete a event with id.
-   * DELETE events/:id
+   * Delete a comment with id.
+   * DELETE comments/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -125,4 +118,4 @@ class EventController {
   }
 }
 
-module.exports = EventController
+module.exports = SearchController
