@@ -2,6 +2,7 @@
 const User = use('App/Models/User')
 const Room = use('App/Models/Room')
 const Chat = use('App/Models/Chat')
+const ChatGPT = use('App/Models/ChatGPT')
 const { MongoClient, ObjectId } = use('mongodb')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -141,6 +142,39 @@ class RoomController {
       console.log(e)
     } finally {
 
+    }
+  }
+
+  async listChatGPT ({ params, request, response, view }) {
+    try {
+      const all = request.all()
+      return await new Promise(async (resolve, reject) => {
+        ChatGPT.find({ user_id: all.user_id }).sort({ 'created_at': 1 }).then(collection => {
+          resolve(collection)
+        })
+      }).catch(error => console.log(error))
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async saveChatGPT ({ params, request, response, view }) {
+    try {
+      const all = request.all()
+      const save = new ChatGPT({
+        user_id: all.user_id,
+        user_role: all.user_role,
+        chat_content: all.chat_content,
+        created_at: new Date()
+      })
+
+      return await new Promise(async (resolve, reject) => {
+        save.save().then(collection => {
+          resolve(collection)
+        })
+      }).catch(error => console.log(error))
+    } catch (e) {
+      console.log(e)
     }
   }
 

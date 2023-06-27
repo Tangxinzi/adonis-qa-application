@@ -9,6 +9,7 @@ const Star = use('App/Models/Star')
 const Sign = use('App/Models/Sign')
 const Event = use('App/Models/Event')
 const Comment = use('App/Models/Comment')
+const Follow = use('App/Models/Follow')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -68,8 +69,19 @@ class UserController {
 
     if (request.method() == 'GET') {
       return await new Promise(async (resolve, reject) => {
-        User.findOne({ _id: params.id }).then(collection => {
-          resolve(collection)
+        User.findOne({ _id: params.id }).then(async collection => {
+          var userinfo = collection
+          if (all.to_follow_id) {
+            userinfo._doc.follow_status = await new Promise(async (resolve, reject) => {
+              Follow.findOne({
+                user_id: all.to_follow_id,
+                follow_id: params.id
+              }).then(follow => {
+                resolve(follow ? follow.follow_status : false)
+              })
+            }).catch(error => console.log(error))
+          }
+          resolve(userinfo)
         })
       }).catch(error => console.log(error))
     }
@@ -109,11 +121,11 @@ class UserController {
         number: await Star.count({ user_id: params.id })
       },
       {
-        text: 'Coin',
-        number: 0,
+        text: 'Follow',
+        number: await Follow.count({ follow_id: params.id })
       },
       {
-        text: 'Comments',
+        text: 'Comment',
         number: await Comment.count({ user_id: params.id })
       },
     ]
@@ -224,61 +236,59 @@ class UserController {
     }
   }
 
-  /**
-   * Create/save a new user.
-   * POST users
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
-  }
+  async follow({
+    request,
+    response,
+    view
+  }) {
+    try {
+      const all = request.all()
 
-  /**
-   * Display a single user.
-   * GET users/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
+      const follow = await new Promise(async (resolve, reject) => {
+        Follow.findOne({
+          follow_id: all.follow_id,
+          user_id: all.user_id
+        }).then(collection => {
+          resolve(collection)
+        })
+      }).catch(error => console.log(error))
 
-  /**
-   * Render a form to update an existing user.
-   * GET users/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+      // 如果已存在 follow 数据，则删除
+      if (follow) {
+        return await new Promise(async (resolve, reject) => {
+          if (all.follow_status == 'false') {
+            Follow.deleteOne({
+              follow_id: all.follow_id,
+              user_id: all.user_id
+            }).then(collection => {
+              resolve(collection)
+            })
+          } else {
+            Follow.findOne({
+              follow_id: all.follow_id,
+              user_id: all.user_id
+            }).then(collection => {
+              resolve(collection)
+            })
+          }
+        }).catch(error => console.log(error))
+      }
 
-  /**
-   * Update user details.
-   * PUT or PATCH users/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
+      const save = new Follow({
+        follow_id: all.follow_id,
+        user_id: all.user_id,
+        follow_status: all.follow_status || '',
+        created_at: new Date()
+      })
 
-  /**
-   * Delete a user with id.
-   * DELETE users/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+      return await new Promise(async (resolve, reject) => {
+        save.save().then(collection => {
+          resolve(collection)
+        })
+      }).catch(error => console.log(error))
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 

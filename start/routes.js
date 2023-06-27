@@ -65,6 +65,7 @@ Route.group(() => {
   Route.get('/user/events', 'Api/UserController.events')
   Route.get('/user/sign', 'Api/UserController.sign')
   Route.post('/user/sign', 'Api/UserController.sign')
+  Route.get('/user/follow', 'Api/UserController.follow')
   Route.get('/user/sign/days', 'Api/UserController.days')
   Route.get('/user/comment', 'Api/CommentController.index')
   Route.post('/comment/create', 'Api/CommentController.create')
@@ -86,6 +87,10 @@ Route.group(() => {
   Route.post('/chat/send/:id', 'Api/RoomController.send')
   Route.post('/chat/gpt', 'Api/RoomController.gpt')
   Route.post('/chat/create', 'Api/RoomController.create')
+
+  // CHATGPT 机器人聊天
+  Route.get('/chat/chatgpt/list', 'Api/RoomController.listChatGPT')
+  Route.post('/chat/chatgpt/save', 'Api/RoomController.saveChatGPT')
 
   Route.get('/coin', 'Api/CoinController.index')
 }).prefix('/api/v2')
