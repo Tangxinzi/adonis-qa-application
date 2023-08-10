@@ -61,6 +61,7 @@ Route.group(() => {
   Route.post('/user/info/:id', 'Api/UserController.info')
   Route.get('/user/data/:id', 'Api/UserController.data')
   Route.get('/user/tutors', 'Api/UserController.tutors')
+  Route.get('/user/recents', 'Api/UserController.recents')
   Route.get('/user/favorites', 'Api/UserController.favorites')
   Route.get('/user/events', 'Api/UserController.events')
   Route.get('/user/sign', 'Api/UserController.sign')

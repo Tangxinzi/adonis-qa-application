@@ -32,6 +32,7 @@
     "adonis-mongorito": "^0.0.2",
     "axios": "^0.27.2",
     "chatgpt": "^5.2.4",
+    "cheerio": "^1.0.0-rc.12",
     "core-js": "^3.26.1",
     "exceljs": "^3.10.0",
     "form-data": "^4.0.0",

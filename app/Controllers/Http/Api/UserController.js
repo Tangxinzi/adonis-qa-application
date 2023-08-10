@@ -10,6 +10,7 @@ const Sign = use('App/Models/Sign')
 const Event = use('App/Models/Event')
 const Comment = use('App/Models/Comment')
 const Follow = use('App/Models/Follow')
+const Recent = use('App/Models/Recent')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -167,6 +168,25 @@ class UserController {
             star: await Star.count({ question_id: collection[i].question_id }),
             comment: await Comment.count({ question_id: collection[i].question_id }),
             created_at: collection[i]['created_at'],
+          }
+        }
+        resolve(data)
+      })
+    }).catch(error => console.log(error))
+  }
+
+  // 浏览记录
+  async recents ({ request, response }) {
+    const all = request.all()
+    return await new Promise(async (resolve, reject) => {
+      Recent.find({ user_id: all.user_id }).sort({ 'created_at': -1 }).then(async (collection) => {
+        var data = []
+        for (var i = 0; i < collection.length; i++) {
+          data[i] = {
+            question: await Question.findOne({ _id: collection[i].recent_id }),
+            type: collection[i].recent_type,
+            date: collection[i].recent_date,
+            created_at: Moment(collection[i]['created_at']).format('YYYY-MM-DD hh:mm:ss'),
           }
         }
         resolve(data)

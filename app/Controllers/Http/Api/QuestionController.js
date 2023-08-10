@@ -1,11 +1,13 @@
 'use strict'
 const MD5 = use('md5')
+const Moment = use('moment')
 const Randomstring = use("randomstring")
 const User = use('App/Models/User')
 const Like = use('App/Models/Like')
 const Star = use('App/Models/Star')
 const Question = use('App/Models/Question')
 const Coin = use('App/Models/Coin')
+const Recent = use('App/Models/Recent')
 
 const {
   MongoClient,
@@ -249,6 +251,33 @@ class QuestionController {
       await Question.updateOne({ "_id": new ObjectId(params.id) }, { $inc: { question_view: 1 }})
 
       if (all.user_id) {
+        // 浏览记录
+        const recents = await new Promise(async (resolve, reject) => {
+          Recent.find({
+            recent_id: params.id,
+            user_id: all.user_id,
+            recent_type: 'question'
+          }).then(collection => {
+            resolve(collection)
+          })
+        }).catch(error => console.log(error))
+
+        if (!recents.length) {
+          const save = new Recent({
+            recent_id: params.id,
+            user_id: all.user_id,
+            recent_type: 'question',
+            recent_date: Moment().format('YYYY-MM-DD'),
+            created_at: new Date()
+          })
+
+          await new Promise(async (resolve, reject) => {
+            save.save().then(collection => {
+              resolve(collection)
+            })
+          }).catch(error => console.log(error))
+        }
+
         like = await new Promise(async (resolve, reject) => {
           Like.findOne({
             question_id: params.id,
@@ -346,7 +375,10 @@ class QuestionController {
             ]
             resolve(collection)
           })
-      }).catch(error => console.log(error))
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
     } catch (e) {
       console.log(e)
     }
