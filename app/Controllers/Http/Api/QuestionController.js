@@ -262,7 +262,7 @@ class QuestionController {
           })
         }).catch(error => console.log(error))
 
-        if (!recents.length) {
+        if (!recents.length && params.id && all.user_id) {
           const save = new Recent({
             recent_id: params.id,
             user_id: all.user_id,
