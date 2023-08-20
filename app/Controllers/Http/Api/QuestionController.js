@@ -6,6 +6,7 @@ const User = use('App/Models/User')
 const Like = use('App/Models/Like')
 const Star = use('App/Models/Star')
 const Question = use('App/Models/Question')
+const Comment = use('App/Models/Comment')
 const Coin = use('App/Models/Coin')
 const Recent = use('App/Models/Recent')
 
@@ -246,7 +247,7 @@ class QuestionController {
     view
   }) {
     try {
-      var all = request.all(), like = '', star = ''
+      var all = request.all(), like = '', star = '', userinfo = {}, comments = []
 
       await Question.updateOne({ "_id": new ObjectId(params.id) }, { $inc: { question_view: 1 }})
 
@@ -258,6 +259,12 @@ class QuestionController {
             user_id: all.user_id,
             recent_type: 'question'
           }).then(collection => {
+            resolve(collection)
+          })
+        }).catch(error => console.log(error))
+
+        userinfo = await new Promise(async (resolve, reject) => {
+          User.findOne({ _id: all.user_id }).then(collection => {
             resolve(collection)
           })
         }).catch(error => console.log(error))
@@ -295,45 +302,72 @@ class QuestionController {
             resolve(collection)
           })
         }).catch(error => console.log(error))
+
+        comments = await new Promise(async (resolve, reject) => {
+          await Comment.find({
+            question_id: params.id
+          }).then(async comments => {
+            for (var i = 0; i < comments.length; i++) {
+              await new Promise((resolve, reject) => {
+                User.findOne({
+                  _id: comments[i].user_id
+                }, {
+                  user_name: 1,
+                  avatar: 1
+                }).then(user => {
+                  comments[i] = {
+                    ...comments[i]._doc,
+                    userinfo: user
+                  }
+                  // comments[i]['userinfo'] = 0
+                  resolve(user)
+                })
+              }).catch(error => console.log(error))
+            }
+
+            resolve(comments)
+          })
+        }).catch(error => console.log(error))
       }
 
-      return await new Promise(async (resolve, reject) => {
+      var question = await new Promise(async (resolve, reject) => {
         Question
-          .aggregate([{
+          .aggregate([
+            {
               "$match": {
                 _id: {
                   $eq: new ObjectId(params.id)
                 }
               }
             },
-            {
-              "$project": {
-                "u_id": {
-                  "$convert": {
-                    "input": "$user_id",
-                    "to": "objectId"
-                  }
-                },
-                "q_id": {
-                  "$convert": {
-                    "input": "$_id",
-                    "to": "string"
-                  }
-                },
-                _id: 1,
-                user_id: 1,
-                question_title: 1,
-                question_detail: 1,
-                question_tips: 1,
-                question_status: 1,
-                question_solve: 1,
-                question_view: 1,
-                question_name: 1,
-                question_code: 1,
-                file: 1,
-                created_at: 1
-              }
-            },
+            // {
+            //   "$project": {
+            //     "u_id": {
+            //       "$convert": {
+            //         "input": "$user_id",
+            //         "to": "objectId"
+            //       }
+            //     },
+            //     "q_id": {
+            //       "$convert": {
+            //         "input": "$_id",
+            //         "to": "string"
+            //       }
+            //     },
+            //     _id: 1,
+            //     user_id: 1,
+            //     question_title: 1,
+            //     question_detail: 1,
+            //     question_tips: 1,
+            //     question_status: 1,
+            //     question_solve: 1,
+            //     question_view: 1,
+            //     question_name: 1,
+            //     question_code: 1,
+            //     file: 1,
+            //     created_at: 1
+            //   }
+            // },
             {
               $lookup: {
                 localField: 'u_id', // 本地关联的字段
@@ -351,20 +385,10 @@ class QuestionController {
               },
             }
           ]).then(async (collection) => {
-            for (var i = 0; i < collection[0].comments.length; i++) {
-              collection[0].comments[i]['userinfo'] = await new Promise((resolve, reject) => {
-                User.findOne({
-                  _id: collection[0].comments[i].user_id
-                }, {
-                  user_name: 1,
-                  avatar: 1
-                }).then(collection => {
-                  resolve(collection)
-                })
-              }).catch(error => console.log(error))
-            }
+            collection[0].userinfo = userinfo
             collection[0].like = like
             collection[0].star = star
+            collection[0].comments = comments
             collection[0].count = [
               await Like.count({
                 question_id: collection[0].q_id
@@ -379,6 +403,8 @@ class QuestionController {
         console.log(error)
         reject(error)
       })
+
+      return question
     } catch (e) {
       console.log(e)
     }

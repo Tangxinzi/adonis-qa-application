@@ -2,10 +2,7 @@
 strUsername="jiangkun"
 strToken="f6fe94a2ad2aa310ab9ad0c57aad7f98"
 installDir="/usr/local/flynat"
-manager="darwin"
-distro="Darwin"
-serviceStatus=0
-scriptAddress="https://flynat.api.51miaole.com/api/v1/download/script/autostart/"
+flynatc="sudo ${installDir}/flynatc"
 
 usage()
 {
@@ -19,38 +16,24 @@ Options:
   stop      关闭服务
   status    服务状态
   logs      查看客户端日志
-  enable    设置开机自启动
+  install   安装客户端
   uninstall 卸载客户端
 EOT
 }
 
-
-start() {
-  pid=$(get_pid)
-  if [[ ! -z $pid ]]
-  then
-    status
-  else
-    nohup $installDir/flynatc -u $strUsername -k $strToken >>$installDir/logs/flynatc.log 2>&1 &
-    status
-    if [[ $serviceStatus -eq 1 ]]
-    then
-        tail -n1 $installDir/logs/flynatc.log
-    fi
-  fi
-}
-
 stop() {
-  pid=$(get_pid)
-  kill -9 $pid
+  ${flynatc} -s stop
   status
 }
-logs() {
-  tail -f $installDir/logs/flynatc.log
+
+start() {
+  ${flynatc} -s start
+  status
 }
 
-
-
+logs() {
+  tail -f "${installDir}/flynatc.log"
+}
 
 get_pid() {
   if [[ $(command -v pgrep) ]]; then
@@ -68,41 +51,24 @@ status() {
   pid=$(get_pid)
   if [[ ! -z $pid ]]
   then
+    ${flynatc} -s status
     echo -e "\033[32m flynatc RUNNING pid $pid \033[0m"
   else
-    serviceStatus=1
     echo -e "\033[31m flynatc STOP \033[0m"
   fi
 }
 
 
-
-# 下载管理脚本
-downloadAutoStartScript() {
-  filename=$1
-  distro=$2
-  postData="username=$strUsername&token=$strToken&install_dir=$installDir&distro=$distro&manager=$manager"
-  curl -so $filename -d $postData $scriptAddress >/dev/null 2>&1
-    if [[ $? -ne 0 ]]; then
-      # curl not found, try wget download
-      wget -qO $filename --post-data=$postData $scriptAddress >/dev/null
-  fi
-}
-
-
 # 设置开机自动启动
-start_enable() {
-    
-        echo -e "\033[31m 垃圾脚本不支持您的系统，请手动设置开机自启动 \033[0m"
-    
+install() {
+  ${flynatc} -s uninstall >/dev/null
+  ${flynatc} -s install -u "${strUsername}" -k "${strToken}"
+  ${flynatc} -s status
 }
 
 # 卸载客户端
 uninstall() {
-    stop
-    rm -rf $installDir
-    echo -e "\033[31m 卸载flynatc成功 \033[0m"
-    
+  ${flynatc} -s uninstall
 }
 
 
@@ -124,8 +90,8 @@ while [[ true ]]; do
       status
       exit 0
       ;;
-    enable)
-      start_enable
+    install)
+      install
       exit 0
       ;;
     uninstall)

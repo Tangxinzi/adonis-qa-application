@@ -2,9 +2,9 @@
 
 strUsername=
 strToken=
-strAddress="download.51miaole.com"
-scriptAddress="https://flynat.api.51miaole.com/api/v1/download/script/"
-strVersion="0.31.2"
+strAddress="download.51miaole.com/shell"
+scriptAddress="https://flynat.api.51miaole.com/api/v2/download/manage.sh"
+strVersion="0.32.1"
 installDir="/usr/local/flynat"
 
 if [[ $UID -ne 0 ]]; then
@@ -22,6 +22,7 @@ Usage :  ${0} [OPTION] ...
 Options:
   --token 		token string
   --username 	username string
+  --version   version string
 EOT
 }
 
@@ -36,6 +37,10 @@ while [[ true ]]; do
 			strUsername=$2
 			shift 2
 			;;
+    --version )
+      strVersion=$2
+      shift 2
+      ;;
 		--help )
 			usage
 			exit 0
@@ -57,6 +62,11 @@ fi
 
 if [[ "$strToken" == "" ]]; then
 	echo token cannot be empty
+	exit 1
+fi
+
+if [[ "$strVersion" == "" ]]; then
+	echo version cannot be empty
 	exit 1
 fi
 
@@ -105,6 +115,11 @@ echo "正在检测运行环境..."
 sysType=$(uname -s)
 if [[ "$sysType" == "Darwin" ]]; then
 	sysType="darwin_amd64"
+	archType=$(uname -m)
+  if [[ $archType == arm64 ]] ;
+  then
+      sysType="darwin_arm64"
+  fi
 elif [[ "$sysType" == "Linux" ]]; then
 		sysType="linux_amd64"
 		archType=$(uname -m)
@@ -185,6 +200,7 @@ check_res() {
   res=$1
   if [[ $res -ne 0 ]];then
     echo -e "      ${red}失败!${none}"
+    exit 1
   else
     echo -e "      ${green}成功!${none}"
   fi
@@ -192,46 +208,62 @@ check_res() {
 
 
 install() {
-  distro=$(Get_GNU_Name)
-  clientName="flynat_${strVersion}_${sysType}"
+#   distro=$(Get_GNU_Name)
+  clientName="flynatc_${strVersion}_${sysType}"
   ClientPackageName="${clientName}.tar.gz"
-  binURL="https://$strAddress/shell/${ClientPackageName}"
+  binURL="https://$strAddress/${ClientPackageName}"
   # 下载客户端
   echo -e "|- 下载客户端...\c"
-  curl -so ${ClientPackageName} $binURL >/dev/null 2>&1
-  if [[ $? -ne 0 ]]; then
-      # curl not found, try wget download
-      wget -qO ${ClientPackageName} $binURL >/dev/null
+  if ! curl -so "${ClientPackageName}" "$binURL";then
+    wget -qO "${ClientPackageName}" "$binURL"
   fi
+
   check_res $?
   # 下载管理客户端脚本
   echo -e "|- 下载管理客户端脚本...\c"
-  postData="username=$strUsername&token=$strToken&install_dir=$installDir&manager=$manager&distro=$distro"
-  curl -so flynatc_manage.sh -d $postData $scriptAddress >/dev/null 2>&1
+  curl --location --request POST "${scriptAddress}" \
+        --silent \
+        --output flynatc_manage.sh \
+        --header 'Content-Type: application/json' \
+        --header 'Accept: */*' \
+        --header 'Connection: keep-alive' \
+        --data-raw '{
+            "username": "'${strUsername}'",
+            "token": "'${strToken}'",
+            "install_dir": "'${installDir}'"
+        }'
+
     if [[ $? -ne 0 ]]; then
       # curl not found, try wget download
-      wget -qO flynatc_manage.sh --post-data=$postData $scriptAddress >/dev/null
+      wget  --quiet \
+            --output-document flynatc_manage.sh \
+            --method POST \
+            --timeout=0 \
+            --header 'Content-Type: application/json' \
+            --header 'Accept: */*' \
+            --header 'Connection: keep-alive' \
+            --body-data '{
+                    "username": "'${strUsername}'",
+                    "token": "'${strToken}'",
+                    "install_dir": "'${installDir}'"
+                }' \
+                "${scriptAddress}"
   fi
   check_res $?
   # 安装客户端
   echo -e "|- 安装客户端...\c"
   chmod +x flynatc_manage.sh
-  chmod +x ${ClientPackageName}
-  tar xzf ${ClientPackageName} && rm -rf ${ClientPackageName}
-  mkdir -p ${installDir}/logs
-  mv ${clientName}/flynatc $installDir && rm -rf ${clientName}
-  chmod u+x $installDir/flynatc && cp flynatc_manage.sh $installDir/manage.sh
+  chmod +x "${ClientPackageName}"
+  tar xf "${ClientPackageName}" && rm -rf "${ClientPackageName}"
   check_res $?
-  # 设置开机自启动
-  read -p "$(echo -e "是否安装为系统服务并设置开机自启动?(y/N) : ")" FLYNAT_SERVICE
-  if [[ "${FLYNAT_SERVICE}" == "y" || "${FLYNAT_SERVICE}" == "Y" ]]
-  then
-        echo -e "|- 设置开机自启动...\c"
-        /bin/bash $installDir/manage.sh enable
-        check_res $?
-  fi
-  echo -e "|- 启动客户端服务...\c"
-  start
+  mkdir -p ${installDir}/logs
+  mv "${clientName}/flynatc" $installDir && rm -rf "${clientName}"
+  chmod u+x $installDir/flynatc && cp flynatc_manage.sh $installDir/manage.sh && chmod u+x $installDir/manage.sh
+  check_res $?
+  # 设置开机自启动和启动客户端服务
+  echo -e "|- 设置开机自启动和启动客户端服务...\c"
+  /bin/bash $installDir/manage.sh install
+  check_res $?
   echo -e "客户端安装路径: ${magenta}$installDir${none}"
   echo -e "客户端管理脚本: ${magenta}$installDir/manage.sh${none}"
   echo -e "使用 ${magenta}$installDir/manage.sh start${none} 命令启动映射服务"
